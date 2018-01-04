@@ -1,8 +1,8 @@
 <view class="error f16 {{error.show?'show':'hidden'}}">{{error.msg}}</view>
 <!--遮罩层-->
-<view class="dialog-mask {{isDatePickerVisible? 'show': 'hidden'}}" bindtap="hideCitySelected" />
+<view class="dialog-mask {{isDatePickerVisible? 'show': 'hidden'}}" bindtap="toggleDatePicker" data-show="0" />
 <!--时间选择-->
-<picker-view class="picker-view f13 {{isDatePickerVisible? 'show': 'hidden'}}" indicator-style="height:100rpx;" value="{{value}}" bindchange="bindChange">
+<picker-view class="picker-view f13 {{isDatePickerVisible? 'show': 'hidden'}}" indicator-style="height:100rpx;" value="{{dissipateDate}}" bindchange="bindDateChange">
   <picker-view-column>
     <view wx:for="{{years}}" wx:key="{{index}}" class="picker-item">{{item}}年</view>
   </picker-view-column>
@@ -178,24 +178,17 @@
           <input type="digit" name="amount" />
         </view>
         <text class="name">消费时间<text class="name1">（自动填充为当前时间）</text></text>
-        <view class="wrap">
-          <!-- <picker mode="date" value="{{dissipateDate}}" bindchange="bindSelectChange" data-name="dissipateDate">
-            {{dissipateDate}}
-            <image src="../../images/date.png" class="icon" />
-            <input type="text" hidden="true" disabled="true" name="dissipateDate" value="{{dissipateDate}}" />
-          </picker>  -->
-          {{year}}年{{month}}月{{day}}日{{hour}}时{{minute}}分{{second}}秒
+        <view class="wrap" bindtap="toggleDatePicker" data-show="1">
+          {{year}}-{{month}}-{{day}} {{hour}}:{{minute}}:{{second}}
+          <input type="text" hidden="true" disabled="true" name="dissipateDate" value="{{year}}-{{month}}-{{day}} {{hour}}:{{minute}}:{{second}}" />
         </view>
         <view class="wrap noborder mt10">
-          <text>消费场景</text>
-          <radio-group class="radio-group fr" bindchange="radioChange" name="scene">
-            <label class="ml10" wx:for="{{consumptionScene}}" wx:key="index">
+          <radio-group class="radio-group fl" bindchange="radioChange" name="scene">
+            <label class="mr10" wx:for="{{consumptionScene}}" wx:key="index">
               <radio value="{{item.Value}}" checked="{{item.Checked}}" />{{item.Name}}
             </label>
           </radio-group>
-        </view>
-        <view class="wrap noborder mt10">
-          <label>
+          <label class="fr">
             <switch bindchange="bindSwitchChange" type="checkbox" checked="{{hasIntegral}}" name="hasIntegral" data-name="hasIntegral" /> 是否有积分
           </label>
         </view>

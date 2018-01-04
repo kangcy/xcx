@@ -13,19 +13,19 @@ for (let i = 2017; i <= date.getFullYear(); i++) {
   years.push(i)
 }
 for (let i = 1; i <= 12; i++) {
-  months.push(i)
+  months.push(util.formatNumber(i))
 }
 for (let i = 1; i <= 31; i++) {
-  days.push(i)
+  days.push(util.formatNumber(i))
 }
-for (let i = 1; i <= 24; i++) {
-  hours.push(i)
+for (let i = 1; i < 24; i++) {
+  hours.push(util.formatNumber(i))
 }
-for (let i = 1; i <= 60; i++) {
-  minutes.push(i)
+for (let i = 1; i < 60; i++) {
+  minutes.push(util.formatNumber(i))
 }
-for (let i = 1; i <= 60; i++) {
-  seconds.push(i)
+for (let i = 1; i < 60; i++) {
+  seconds.push(util.formatNumber(i))
 }
 Page({
   data: {
@@ -55,7 +55,6 @@ Page({
     isCash: false, // 是否刷卡套现
     isPosUsed: false, // 是否使用POS机
     hasIntegral: false, // 是否有积分
-    dissipateDate: util.formatTime(new Date, "yyyyMMdd"), // 消费时间
     consumptionScene: [{ Name: '套现', Value: 'simulate', Checked: 'true' }, { Name: '真实消费', Value: 'real' }], // 消费场景
     error: common.error,
     // 数组中保存的可选日期
@@ -67,14 +66,15 @@ Page({
     seconds: seconds,
     // 默认的顶部日期
     year: date.getFullYear(),
-    month: date.getMonth() + 1,
-    day: date.getDate(),
-    hour: date.getHours(),
-    minute: date.getMinutes(),
-    second: date.getSeconds(),
-    // 滑动框中放入的是第几个值
-    value: [date.getFullYear(), date.getMonth(), date.getDate() - 1],
-    isDatePickerVisible: true // 时间选择控件
+    month: util.formatNumber(date.getMonth() + 1),
+    day: util.formatNumber(date.getDate()),
+    hour: util.formatNumber(date.getHours()),
+    minute: util.formatNumber(date.getMinutes()),
+    second: util.formatNumber(date.getSeconds()),
+    // 消费时间
+    // dissipateDate: util.formatTime(new Date, "yyyyMMdd"), // 消费时间
+    dissipateDate: [date.getFullYear(), date.getMonth(), date.getDate() - 1, date.getHours() - 1, date.getMinutes() - 1, date.getSeconds() - 1],
+    isDatePickerVisible: false // 时间选择控件
   },
   onLoad: function () {
     var that = this
@@ -221,12 +221,6 @@ Page({
           currMerchant: e.detail.value
         })
         break;
-      // 消费时间
-      case "dissipateDate":
-        this.setData({
-          dissipateDate: e.detail.value
-        })
-        break;
       default:
         break;
     }
@@ -277,12 +271,6 @@ Page({
           currCard: e.detail.value
         })
         break;
-      // 消费时间
-      case "dissipateDate":
-        this.setData({
-          dissipateDate: e.detail.value
-        })
-        break;
       // 是否有积分
       case "hasIntegral":
         this.setData({
@@ -308,13 +296,20 @@ Page({
   },
   bindDateChange: function (e) {
     const val = e.detail.value
+    console.log(JSON.stringify(val))
     this.setData({
       year: this.data.years[val[0]],
       month: this.data.months[val[1]],
       day: this.data.days[val[2]],
-      hour: this.data.days[val[3]],
-      minute: this.data.days[val[4]],
-      second: this.data.days[val[5]]
+      hour: this.data.hours[val[3]],
+      minute: this.data.minutes[val[4]],
+      second: this.data.seconds[val[5]]
+    })
+  },
+  // 切换时间选择控件
+  toggleDatePicker: function (e) {
+    this.setData({
+      isDatePickerVisible: parseInt(e.currentTarget.dataset.show) == 0 ? false : true
     })
   },
   // 新增信用卡

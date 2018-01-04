@@ -18,11 +18,13 @@ const formatTime = (date, format) => {
   }
 }
 
+// 格式化数字
 const formatNumber = n => {
   n = n.toString()
   return n[1] ? n : '0' + n
 }
 
+// 校验是否数字及范围
 const checkNumber = (num, min, max) => {
   if (!num || num == undefined) {
     return false
@@ -37,5 +39,6 @@ const checkNumber = (num, min, max) => {
 
 module.exports = {
   formatTime: formatTime,
+  formatNumber: formatNumber,
   checkNumber: checkNumber
 }
