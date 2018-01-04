@@ -1,0 +1,44 @@
+<import src="../../template/template" />
+<swiper indicator-dots="true" autoplay="true" circular="true" interval="5000" duration="1000" indicator-color="#ccc" indicator-active-color="#fff" style="background: #373c58;">
+  <block wx:for="{{swiper}}" wx:key="{{index}}">
+    <swiper-item>
+      <navigator url="{{item.Link}}" class="top">
+        <text class="title">{{item.Name}}</text>
+        <text class="name">¥{{item.Price}}</text>
+        <text class="name">{{item.Num}}笔</text>
+        <text class="name">{{item.CardNum}}张卡</text>
+      </navigator>
+    </swiper-item>
+  </block>
+</swiper>
+<view class="tc mt20 mb10">
+  <button type="{{currtab===0?'warn':'default'}}" size="mini" plain="false" size="mini" catchtap="changeTab" data-hi="0">计划</button>
+  <button type="{{currtab===1?'warn':'default'}}" size="mini" plain="false" size="mini" class="ml5 mr5" catchtap="changeTab" data-hi="1">账单</button>
+  <button type="{{currtab===2?'warn':'default'}}" size="mini" plain="false" size="mini" catchtap="changeTab" data-hi="2">费用</button>
+</view>
+<swiper wx-if="{{showSwiper}}" current="{{currtab}}" circular="true" duration="1000" style="height:{{scrollHeight}}px;" bindchange="swiperChange">
+  <swiper-item>
+    <scroll-view class="bill" scroll-y style="height:{{scrollHeight}}px;">
+      <block wx:for="{{card}}" wx:key="index" wx:for-index="index" wx:for-item="item">
+        <template is="line" data="{{bottom:'10rpx solid #eee'}}"></template>
+        <template is="card" data="{{...item}}"></template>
+      </block>
+    </scroll-view>
+  </swiper-item>
+  <swiper-item>
+    <scroll-view class="bill" scroll-y style="height:{{scrollHeight}}px;">
+      <block wx:for="{{card}}" wx:key="index" wx:for-index="index" wx:for-item="item">
+        <template is="card" data="{{...item}}"></template>
+        <template is="line" data="{{bottom:'10rpx solid #eee'}}"></template>
+      </block>
+    </scroll-view>
+  </swiper-item>
+  <swiper-item>
+    <scroll-view class="bill" scroll-y style="height:{{scrollHeight}}px;">
+      <block wx:for="{{card}}" wx:key="index" wx:for-index="index" wx:for-item="item">
+        <template is="card" data="{{...item}}"></template>
+        <template is="line" data="{{bottom:'10rpx solid #eee'}}"></template>
+      </block>
+    </scroll-view>
+  </swiper-item>
+</swiper>

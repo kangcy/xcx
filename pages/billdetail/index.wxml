@@ -1,0 +1,25 @@
+<import src="../../template/template" />
+<template is="card" data="{{...card}}"></template>
+<template is="line" data="{{bottom:'10rpx solid #eee'}}"></template>
+<view class="full fl tc mt20 mb15">
+  <button type="{{currtab===0?'warn':'default'}}" size="mini" plain="false" size="mini" catchtap="changeTab" data-index="0">计划</button>
+  <button type="{{currtab===1?'warn':'default'}}" size="mini" plain="false" size="mini" class="ml5" catchtap="changeTab" data-index="1">账单</button>
+</view>
+<!--卡片列表-->
+<swiper current="{{currtab}}" circular="true" duration="1000" style="height:{{scrollHeight}}px;" bindchange="swiperChange">
+  <swiper-item>
+    <scroll-view scroll-y style="height:{{scrollHeight}}px;" class="bill">
+      <block wx:for="{{plan}}" wx:key="index" wx:for-index="index" wx:for-item="item">
+        <template is="line" data="{{bottom:'10rpx solid #eee'}}"></template>
+        <template is="plan" data="{{...item}}"></template>
+      </block>
+    </scroll-view>
+  </swiper-item>
+  <swiper-item>
+    <scroll-view class="container" scroll-y style="height:{{scrollHeight}}px;" class="bill">
+      <block wx:for="{{plan}}" wx:key="index" wx:for-index="index" wx:for-item="item">
+
+      </block>
+    </scroll-view>
+  </swiper-item>
+</swiper>

@@ -1,0 +1,35 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="userinfo">
+    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+    <block wx:else>
+      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
+      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+    </block>
+  </view>
+  <!--卡片列表-->
+  <block wx:for="{{card}}" wx:key="index" wx:for-index="index" wx:for-item="item">
+    <template is="card" data="{{...item}}"></template>
+  </block>
+  <view class="usermotto">
+    <text class="user-motto">{{motto}}</text>
+  </view>
+</view>
+
+<template name="card">
+  <view class="cards" catchtap="showCard" id="{{Id}}">
+    <view class="head1">
+      <view class="cover">
+        <image src="{{Icon}}" background-size="cover"></image>
+      </view>
+      <text class="name1 fl tl">{{BankName}} {{Name}}</text>
+      <text class="name2 fr">{{Remainder}}</text>
+      <text class="name1 fl tl">{{Price}}</text>
+      <text class="name2 fr">剩余应还</text>
+    </view>
+    <view class="head2">
+      <text class="name fl">账单日 <text class="cff6900">{{StatementDate}}</text></text>
+      <text class="name fr">到期还款日 <text class="cff6900">{{PaymentDueDay}}</text></text>
+    </view>
+  </view>
+</template>

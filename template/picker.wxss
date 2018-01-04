@@ -1,0 +1,51 @@
+.dialog-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 8;
+}
+
+.dialog-mask.show {
+  transition: all 0.25s ease;
+  visibility: visible;
+}
+
+.dialog-mask.hidden {
+  transition: all 0.25s ease;
+  visibility: hidden;
+}
+
+.picker-view {
+  width: 100%;
+  z-index: 12;
+  background-color: #fff;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 0rpx;
+  left: 0rpx;
+  height: 40vh;
+}
+
+.picker-view.show {
+  transform: translateY(0);
+  transition: all 0.4s ease;
+  visibility: visible;
+}
+
+.picker-view.hidden {
+  transform: translateY(-40vh);
+  transition: all 0.4s ease;
+  visibility: hidden;
+}
+
+.picker-item {
+  line-height: 70rpx;
+  margin-left: 5rpx;
+  margin-right: 5rpx;
+  text-align: center;
+}

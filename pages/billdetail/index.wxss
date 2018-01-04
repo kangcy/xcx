@@ -1,0 +1,26 @@
+swiper {
+  height: 250rpx;
+}
+
+.top {
+  width: 100%;
+  height: 250rpx;
+  background: #373c58;
+  color: #fff;
+}
+
+.top .title {
+  width: 100%;
+  line-height: 100rpx;
+  font-size: 30rpx;
+  float: left;
+  text-align: center;
+}
+
+.top .name {
+  width: 33.3%;
+  display: inline-block;
+  font-size: 36rpx;
+  float: left;
+  text-align: center;
+}

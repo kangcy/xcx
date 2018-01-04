@@ -1,0 +1,294 @@
+<view class="error f16 {{error.show?'show':'hidden'}}">{{error.msg}}</view>
+<!--遮罩层-->
+<view class="dialog-mask {{isDatePickerVisible? 'show': 'hidden'}}" bindtap="hideCitySelected" />
+<!--时间选择-->
+<picker-view class="picker-view f13 {{isDatePickerVisible? 'show': 'hidden'}}" indicator-style="height:100rpx;" value="{{value}}" bindchange="bindChange">
+  <picker-view-column>
+    <view wx:for="{{years}}" wx:key="{{index}}" class="picker-item">{{item}}年</view>
+  </picker-view-column>
+  <picker-view-column>
+    <view wx:for="{{months}}" wx:key="{{index}}" class="picker-item">{{item}}月</view>
+  </picker-view-column>
+  <picker-view-column>
+    <view wx:for="{{days}}" wx:key="{{index}}" class="picker-item">{{item}}日</view>
+  </picker-view-column>
+  <picker-view-column>
+    <view wx:for="{{hours}}" wx:key="{{index}}" class="picker-item">{{item}}时</view>
+  </picker-view-column>
+  <picker-view-column>
+    <view wx:for="{{minutes}}" wx:key="{{index}}" class="picker-item">{{item}}分</view>
+  </picker-view-column>
+  <picker-view-column>
+    <view wx:for="{{seconds}}" wx:key="{{index}}" class="picker-item">{{item}}秒</view>
+  </picker-view-column>
+</picker-view>
+<view class="inline tc tabs f15">
+  <view class="tab {{currtab===0?'curr':''}}" catchtap="changeTab" value="0" data-index="0">信用卡</view>
+  <view class="tab {{currtab===1?'curr':''}}" catchtap="changeTab" value="0" data-index="1">储蓄卡</view>
+  <view class="tab {{currtab===2?'curr':''}}" catchtap="changeTab" value="0" data-index="2">账单</view>
+  <view class="tab {{currtab===3?'curr':''}}" catchtap="changeTab" value="0" data-index="3">计划</view>
+  <view class="tab {{currtab===4?'curr':''}}" catchtap="changeTab" value="0" data-index="4">POS</view>
+  <view class="tab {{currtab===5?'curr':''}}" catchtap="changeTab" value="0" data-index="5">收益</view>
+  <view class="line" style="left:16.6666%;"></view>
+  <view class="line" style="left:{{16.6666*2}}%;"></view>
+  <view class="line" style="left:{{16.6666*3}}%;"></view>
+  <view class="line" style="left:{{16.6666*4}}%;"></view>
+  <view class="line" style="left:{{16.6666*5}}%;"></view>
+</view>
+<toast hidden="{{true}}" bindchange="toast1Change">
+  提交成功
+</toast>
+<swiper v-if="{{showSwiper}}" current="{{currtab}}" circular="true" duration="1000" style="height:{{scrollHeight}}px;" bindchange="swiperChange">
+  <!--信用卡-->
+  <swiper-item>
+    <scroll-view class="container" scroll-y style="height:{{scrollHeight}}px;">
+      <form bindsubmit="formSubmit0">
+        <text class="name">卡号</text>
+        <view class="wrap">
+          <input type="text" maxlength="19" name="cardNo" bindblur="bindBankName" data-name="bankName" />
+        </view>
+        <text class="name">银行<text class="name1">（根据卡号自动补充）</text></text>
+        <view class="wrap">
+          <input type="text" disabled="true" name="bankName" value="{{bankName}}" />
+        </view>
+        <text class="name">当前可用额度</text>
+        <view class="wrap">
+          <input type="number" disabled="true" name="totalAmount" />
+        </view>
+        <text class="name">固定额度</text>
+        <view class="wrap">
+          <input type="number" maxlength="10" name="fixAmount" />
+        </view>
+        <text class="name">临时额度</text>
+        <view class="wrap">
+          <input type="digit" maxlength="10" name="tempAmount" />
+        </view>
+        <text class="name">临时额度到期日</text>
+        <view class="wrap">
+          <picker mode="date" value="{{quotaDate}}" bindchange="bindSelectChange" data-name="quotaDate">
+            {{quotaDate}}
+            <image src="../../images/date.png" class="icon" />
+            <input type="text" hidden="true" disabled="true" name="tempAmountExpireTime" value="{{quotaDate}}" />
+          </picker>
+        </view>
+        <text class="name">卡片有效期</text>
+        <view class="wrap">
+          <picker mode="date" value="{{validiteDate}}" bindchange="bindSelectChange" data-name="validiteDate">
+            {{validiteDate}}
+            <image src="../../images/date.png" class="icon" />
+            <input type="text" hidden="true" disabled="true" name="validiteDate" value="{{validiteDate}}" />
+          </picker>
+        </view>
+        <text class="name">卡片等级</text>
+        <view class="wrap">
+          <picker bindchange="bindLevelChange" value="{{currLevel}}" range="{{levelArray}}">
+            {{levelArray[currLevel]}}
+            <image src="../../images/select.png" class="icon select" />
+            <input type="text" hidden="true" disabled="true" name="level" value="{{levelArray[currLevel]}}" />
+          </picker>
+        </view>
+        <text class="name">账单日</text>
+        <view class="wrap">
+          <picker value="{{currBillDate}}" range="{{billDateArray}}" bindchange="bindSelectChange" data-name="currBillDate">
+            {{billDateArray[currBillDate]}}
+            <image src="../../images/select.png" class="icon select" />
+            <input type="text" hidden="true" disabled="true" name="billDate" value="{{billDateArray[currBillDate]}}" />
+          </picker>
+        </view>
+        <view class="mt10 f15">
+          <text class="c888">是否固定账单日</text>
+          <switch bindchange="bindSwitchChange" class="fr" checked="{{isFixedAccount}}" data-name="isFixedAccount" />
+        </view>
+        <text class="name">{{isFixedAccount?"还款日":"间隔天数"}}</text>
+        <view class="wrap">
+          <picker value="{{currBillDate}}" range="{{billDateArray}}" bindchange="bindSelectChange" data-name="currBillDate">
+            {{billDateArray[currBillDate]}}
+            <image src="../../images/select.png" class="icon select" />
+            <input type="text" hidden="true" disabled="true" name="billDate" value="{{billDateArray[currBillDate]}}" />
+          </picker>
+        </view>
+        <!--
+        <text class="name">卡片年费</text>
+        <view class="wrap">
+          <input type="digit" maxlength="10" name="price" />
+        </view>
+        <text class="name">单次交易限额</text>
+        <view class="wrap">
+          <input type="digit" maxlength="10" name="singleTransLimit" />
+        </view>
+        <text class="name">单日交易限额</text>
+        <view class="wrap">
+          <input type="digit" maxlength="10" name="dayTransLimit" />
+        </view>-->
+        <button type="primary" form-type="submit" class="mt20">确定</button>
+      </form>
+    </scroll-view>
+  </swiper-item>
+  <!--储蓄卡-->
+  <swiper-item>
+    <scroll-view class="container" scroll-y style="height:{{scrollHeight}}px;">
+      <form bindsubmit="formSubmit1">
+        <text class="name">卡号</text>
+        <view class="wrap">
+          <input type="text" maxlength="19" bindblur="bindBankName" data-name="bankName1" />
+        </view>
+        <text class="name">银行<text class="name1">（根据卡号自动补充）</text></text>
+        <view class="wrap">
+          <input type="text" disabled="true" name="bankName1" value="{{bankName1}}" />
+        </view>
+        <button type="primary" form-type="submit" class="mt20">确定</button>
+      </form>
+    </scroll-view>
+  </swiper-item>
+  <!--账单-->
+  <swiper-item>
+    <scroll-view class="container" scroll-y style="height:{{scrollHeight}}px;">
+      <form bindsubmit="formSubmit2">
+        <text class="name">POS机</text>
+        <view class="wrap">
+          <picker value="{{currPos}}" range="{{posArray}}" range-key="Name" bindchange="bindSelectChange" data-name="currPos">
+            {{posArray[currPos].Name}}
+            <image src="../../images/select.png" class="icon select" />
+            <input type="text" hidden="true" disabled="true" name="posId" value="{{posArray[currPos].Id}}" />
+          </picker>
+        </view>
+        <text class="name">信用卡</text>
+        <view class="wrap">
+          <picker value="{{currCard}}" range="{{cardArray}}" range-key="Name" bindchange="bindSelectChange" data-name="currCard">
+            {{cardArray[currCard].Name}}
+            <image src="../../images/select.png" class="icon select" />
+            <input type="text" hidden="true" disabled="true" name="cardNo" value="{{cardArray[currCard].CardNo}}" />
+            <input type="text" hidden="true" disabled="true" name="bankName" value="{{cardArray[currCard].Name}}" />
+          </picker>
+        </view>
+        <text class="name">商户类别</text>
+        <view class="wrap">
+          <picker value="{{currMerchant}}" range="{{merchantArray}}" range-key="Name" bindchange="bindSelectChange" data-name="currMerchant">
+            {{merchantArray[currMerchant].Name}}
+            <image src="../../images/select.png" class="icon select" />
+            <input type="text" hidden="true" disabled="true" name="merchantClassify" value="{{merchantArray[currMerchant].Id}}" />
+          </picker>
+        </view>
+        <text class="name">商户名称<text class="name1">（比如汇美建材）</text></text>
+        <view class="wrap">
+          <input type="text" name="merchantId" />
+        </view>
+        <text class="name">消费金额</text>
+        <view class="wrap">
+          <input type="digit" name="amount" />
+        </view>
+        <text class="name">消费时间<text class="name1">（自动填充为当前时间）</text></text>
+        <view class="wrap">
+          <!-- <picker mode="date" value="{{dissipateDate}}" bindchange="bindSelectChange" data-name="dissipateDate">
+            {{dissipateDate}}
+            <image src="../../images/date.png" class="icon" />
+            <input type="text" hidden="true" disabled="true" name="dissipateDate" value="{{dissipateDate}}" />
+          </picker>  -->
+          {{year}}年{{month}}月{{day}}日{{hour}}时{{minute}}分{{second}}秒
+        </view>
+        <view class="wrap noborder mt10">
+          <text>消费场景</text>
+          <radio-group class="radio-group fr" bindchange="radioChange" name="scene">
+            <label class="ml10" wx:for="{{consumptionScene}}" wx:key="index">
+              <radio value="{{item.Value}}" checked="{{item.Checked}}" />{{item.Name}}
+            </label>
+          </radio-group>
+        </view>
+        <view class="wrap noborder mt10">
+          <label>
+            <switch bindchange="bindSwitchChange" type="checkbox" checked="{{hasIntegral}}" name="hasIntegral" data-name="hasIntegral" /> 是否有积分
+          </label>
+        </view>
+        <button type="primary" form-type="submit" class="mt20">确定</button>
+      </form>
+    </scroll-view>
+  </swiper-item>
+  <!--计划-->
+  <swiper-item>
+    <scroll-view class="container" scroll-y style="height:{{scrollHeight}}px;">
+      <form bindsubmit="formSubmit3">
+        <text class="name">卡号</text>
+        <view class="wrap">
+          <input type="text" maxlength="18" />
+        </view>
+        <text class="name">银行<text class="name1">（根据卡号自动补充）</text></text>
+        <view class="wrap">
+          <input type="text" disabled="true" />
+        </view>
+        <button type="primary" form-type="submit" class="mt20">确定</button>
+      </form>
+    </scroll-view>
+  </swiper-item>
+  <!--POS-->
+  <swiper-item>
+    <scroll-view class="container" scroll-y style="height:{{scrollHeight}}px;">
+      <form bindsubmit="formSubmit4">
+        <text class="name">POS机名称</text>
+        <view class="wrap">
+          <input type="text" maxlength="18" name="posId" />
+        </view>
+        <text class="name">刷卡费率<text class="name1">（%）</text></text>
+        <view class="wrap">
+          <input type="digit" maxlength="5" name="cardRate" />
+        </view>
+        <text class="name">闪付费率<text class="name1">（%）</text></text>
+        <view class="wrap">
+          <input type="digit" maxlength="5" name="flashRate" />
+        </view>
+        <text class="name">T0费率<text class="name1">（%）</text></text>
+        <view class="wrap">
+          <input type="digit" maxlength="5" name="t0Rate" />
+        </view>
+        <text class="name">T1费率<text class="name1">（%）</text></text>
+        <view class="wrap">
+          <input type="digit" maxlength="5" name="t1Rate" />
+        </view>
+        <text class="name">当日赎回费率<text class="name1">（%）</text></text>
+        <view class="wrap">
+          <input type="digit" maxlength="5" name="redeemRate" />
+        </view>
+        <text class="name">当日赎回费用</text>
+        <view class="wrap">
+          <input type="digit" maxlength="5" name="redeemFee" />
+        </view>
+        <text class="name">选择储蓄卡</text>
+        <view class="wrap">
+          <picker value="{{currDepositCard}}" range="{{depositCardArray}}" range-key="Name" bindchange="bindSelectChange" data-name="currDepositCard">
+            {{depositCardArray[currDepositCard].Name}}
+            <image src="../../images/select.png" class="icon select" />
+            <input type="text" hidden="true" disabled="true" name="bindCardNo" value="{{depositCardArray[currDepositCard].CardNo}}" />
+            <input type="text" hidden="true" disabled="true" name="bankName" value="{{depositCardArray[currDepositCard].Name}}" />
+          </picker>
+        </view>
+        <view class="mt10 f15">
+          <text class="c888">是否使用</text>
+          <switch bindchange="bindSwitchChange" class="fr" checked="{{isFixedAcisPosUsedcount}}" name="status" data-name="isPosUsed" />
+        </view>
+        <button type="primary" form-type="submit" class="mt20">确定</button>
+      </form>
+    </scroll-view>
+  </swiper-item>
+  <!--收益-->
+  <swiper-item>
+    <scroll-view class="container" scroll-y style="height:{{scrollHeight}}px;">
+      <form bindsubmit="formSubmit5">
+        <text class="name">来源</text>
+        <view class="wrap">
+          <picker value="{{currProfit}}" range="{{profitArray}}" bindchange="bindSelectChange" data-name="currProfit">
+            {{profitArray[currProfit]}}
+            <input type="text" hidden="true" disabled="true" name="profit" value="{{profitArray[currProfit]}}" />
+          </picker>
+        </view>
+        <text class="name">收益金额</text>
+        <view class="wrap">
+          <input type="digit" maxlength="18" />
+        </view>
+        <text class="name">备注</text>
+        <view class="wrap" style="height:8rem;line-height:1rem;padding-top:10rpx;">
+          <textarea maxlength="150" />
+        </view>
+        <button type="primary" form-type="submit" class="mt20">确定</button>
+      </form>
+    </scroll-view>
+  </swiper-item>
+</swiper>

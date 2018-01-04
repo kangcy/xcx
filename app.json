@@ -1,0 +1,56 @@
+{
+  "pages": [
+    "pages/cardedit/index",
+    "pages/card/index",
+    "pages/billdetail/index",
+    "pages/bill/index",
+    "pages/citypick/index",
+    "pages/index/index",
+    "pages/logs/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle": "black",
+    "enablePullDownRefresh": false
+  },
+  "tabBar": {
+    "color": "#999",
+    "selectedColor": "#ff6900",
+    "backgroundColor": "#fff",
+    "list": [
+      {
+        "selectedIconPath": "images/tab/tab11.png",
+        "iconPath": "images/tab/tab10.png",
+        "pagePath": "pages/bill/index",
+        "text": "账单"
+      },
+      {
+        "selectedIconPath": "images/tab/tab01.png",
+        "iconPath": "images/tab/tab00.png",
+        "pagePath": "pages/card/index",
+        "text": "信用卡"
+      },
+      {
+        "selectedIconPath": "images/tab/tab21.png",
+        "iconPath": "images/tab/tab20.png",
+        "pagePath": "pages/index/index",
+        "text": "理财"
+      },
+      {
+        "selectedIconPath": "images/tab/tab31.png",
+        "iconPath": "images/tab/tab30.png",
+        "pagePath": "pages/logs/index",
+        "text": "发现"
+      },
+      {
+        "selectedIconPath": "images/tab/tab41.png",
+        "iconPath": "images/tab/tab40.png",
+        "pagePath": "pages/index/index",
+        "text": "我的"
+      }
+    ]
+  },
+  "debug": true
+}
