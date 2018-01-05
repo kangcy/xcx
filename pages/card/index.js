@@ -70,7 +70,7 @@ Page({
       "Id": 6, "Bank": 6, "Name": "普卡", "Price": 1888, "StatementDate": "05", "PaymentDueDay": "01.25", "Remainder": 1354.5
     }]
     card.forEach(x => {
-      var result = getApp().globalData.bank.filter(y => { return y.Id === x.Bank });
+      var result = app.globalData.bank.filter(y => { return y.Id === x.Bank });
       x.BankName = result[0].Name;
       x.Icon = "../../" + result[0].Icon;
     })
@@ -91,10 +91,40 @@ Page({
       swiper: swiper
     })
   },
-  // 卡片详细
+  // 编辑卡片
   showCard: function (e) {
-    wx.navigateTo({
-      url: "../billdetail/billdetail?key=" + e.currentTarget.dataset.index
+    wx.showActionSheet({
+      itemList: ["查看", "编辑", "新增信用卡", "新增储蓄卡"],
+      success: function (res) {
+        if (res.tapIndex === 0) {
+          wx.navigateTo({
+            url: "../billdetail/index?key=" + e.currentTarget.dataset.index
+          })
+        } else if (res.tapIndex === 1) {
+          // 信用卡
+          if (e.currentTarget.dataset.type == "credit") {
+            wx.navigateTo({
+              url: "../editcard/index?key=" + e.currentTarget.dataset.index
+            })
+          }
+          else {
+            wx.navigateTo({
+              url: "../editdebit/index?key=" + e.currentTarget.dataset.index
+            })
+          }
+        } else if (res.tapIndex === 2) {
+          wx.navigateTo({
+            url: "../editcard/index"
+          })
+        } else if (res.tapIndex === 4) {
+          wx.navigateTo({
+            url: "../editdebit/index"
+          })
+        }
+      },
+      fail: function (res) {
+        console.log(res.errMsg)
+      }
     })
   },
   // 切换标签

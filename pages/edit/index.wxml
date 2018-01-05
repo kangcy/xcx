@@ -38,7 +38,7 @@
 <toast hidden="{{true}}" bindchange="toast1Change">
   提交成功
 </toast>
-<swiper v-if="{{showSwiper}}" current="{{currtab}}" circular="true" duration="1000" style="height:{{scrollHeight}}px;" bindchange="swiperChange">
+<swiper current="{{currtab}}" circular="true" duration="1000" style="height:{{scrollHeight}}px;" bindchange="swiperChange">
   <!--信用卡-->
   <swiper-item>
     <scroll-view class="container" scroll-y style="height:{{scrollHeight}}px;">
@@ -51,7 +51,7 @@
         <view class="wrap">
           <input type="text" disabled="true" name="bankName" value="{{bankName}}" />
         </view>
-        <text class="name">当前可用额度</text>
+        <text class="name">当前剩余可用额度</text>
         <view class="wrap">
           <input type="number" disabled="true" name="totalAmount" />
         </view>
@@ -96,7 +96,7 @@
           </picker>
         </view>
         <view class="mt10 f15">
-          <text class="c888">是否固定账单日</text>
+          <text class="c888">是否固定还款日</text>
           <switch bindchange="bindSwitchChange" class="fr" checked="{{isFixedAccount}}" data-name="isFixedAccount" />
         </view>
         <text class="name">{{isFixedAccount?"还款日":"间隔天数"}}</text>
@@ -104,13 +104,8 @@
           <picker value="{{currBillDate}}" range="{{billDateArray}}" bindchange="bindSelectChange" data-name="currBillDate">
             {{billDateArray[currBillDate]}}
             <image src="../../images/select.png" class="icon select" />
-            <input type="text" hidden="true" disabled="true" name="billDate" value="{{billDateArray[currBillDate]}}" />
+            <input type="text" hidden="true" disabled="true" name="payDateOrDay" value="{{billDateArray[currBillDate]}}" />
           </picker>
-        </view>
-        <!--
-        <text class="name">卡片年费</text>
-        <view class="wrap">
-          <input type="digit" maxlength="10" name="price" />
         </view>
         <text class="name">单次交易限额</text>
         <view class="wrap">
@@ -119,7 +114,13 @@
         <text class="name">单日交易限额</text>
         <view class="wrap">
           <input type="digit" maxlength="10" name="dayTransLimit" />
-        </view>-->
+        </view>
+        <!--
+        <text class="name">卡片年费</text>
+        <view class="wrap">
+          <input type="digit" maxlength="10" name="yearprice" />
+        </view>
+        -->
         <button type="primary" form-type="submit" class="mt20">确定</button>
       </form>
     </scroll-view>
@@ -136,6 +137,14 @@
         <view class="wrap">
           <input type="text" disabled="true" name="bankName1" value="{{bankName1}}" />
         </view>
+        <text class="name">单次交易限额</text>
+        <view class="wrap">
+          <input type="digit" maxlength="10" name="singleTransLimit" />
+        </view>
+        <text class="name">单日交易限额</text>
+        <view class="wrap">
+          <input type="digit" maxlength="10" name="dayTransLimit" />
+        </view>
         <button type="primary" form-type="submit" class="mt20">确定</button>
       </form>
     </scroll-view>
@@ -146,19 +155,19 @@
       <form bindsubmit="formSubmit2">
         <text class="name">POS机</text>
         <view class="wrap">
-          <picker value="{{currPos}}" range="{{posArray}}" range-key="Name" bindchange="bindSelectChange" data-name="currPos">
-            {{posArray[currPos].Name}}
+          <picker value="{{currPos}}" range="{{posArray}}" range-key="posName" bindchange="bindSelectChange" data-name="currPos">
+            {{posArray[currPos].posName}}
             <image src="../../images/select.png" class="icon select" />
-            <input type="text" hidden="true" disabled="true" name="posId" value="{{posArray[currPos].Id}}" />
+            <input type="text" hidden="true" disabled="true" name="posId" value="{{posArray[currPos].posId}}" />
           </picker>
         </view>
         <text class="name">信用卡</text>
         <view class="wrap">
-          <picker value="{{currCard}}" range="{{cardArray}}" range-key="Name" bindchange="bindSelectChange" data-name="currCard">
-            {{cardArray[currCard].Name}}
+          <picker value="{{currCard}}" range="{{creditCardArray}}" range-key="bankName" bindchange="bindSelectChange" data-name="currCard">
+            {{creditCardArray[currCard].bankName}}
             <image src="../../images/select.png" class="icon select" />
-            <input type="text" hidden="true" disabled="true" name="cardNo" value="{{cardArray[currCard].CardNo}}" />
-            <input type="text" hidden="true" disabled="true" name="bankName" value="{{cardArray[currCard].Name}}" />
+            <input type="text" hidden="true" disabled="true" name="cardNo" value="{{creditCardArray[currCard].cardNo}}" />
+            <input type="text" hidden="true" disabled="true" name="bankName" value="{{creditCardArray[currCard].bankName}}" />
           </picker>
         </view>
         <text class="name">商户类别</text>
@@ -246,11 +255,11 @@
         </view>
         <text class="name">选择储蓄卡</text>
         <view class="wrap">
-          <picker value="{{currDepositCard}}" range="{{depositCardArray}}" range-key="Name" bindchange="bindSelectChange" data-name="currDepositCard">
-            {{depositCardArray[currDepositCard].Name}}
+          <picker value="{{currDepositCard}}" range="{{debitCardArray}}" range-key="Name" bindchange="bindSelectChange" data-name="currDepositCard">
+            {{debitCardArray[currDepositCard].Name}}
             <image src="../../images/select.png" class="icon select" />
-            <input type="text" hidden="true" disabled="true" name="bindCardNo" value="{{depositCardArray[currDepositCard].CardNo}}" />
-            <input type="text" hidden="true" disabled="true" name="bankName" value="{{depositCardArray[currDepositCard].Name}}" />
+            <input type="text" hidden="true" disabled="true" name="bindCardNo" value="{{debitCardArray[currDepositCard].CardNo}}" />
+            <input type="text" hidden="true" disabled="true" name="bankName" value="{{debitCardArray[currDepositCard].Name}}" />
           </picker>
         </view>
         <view class="mt10 f15">

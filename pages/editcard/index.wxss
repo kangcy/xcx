@@ -1,0 +1,125 @@
+.container {
+  padding: 0 50rpx;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+
+.error {
+  position: fixed;
+  top: 0;
+  z-index: 999;
+  width: 100%;
+  height: 80rpx;
+  line-height: 80rpx;
+  background: red;
+  color: #fff;
+  text-align: center;
+}
+
+.error.show {
+  transform: translateY(0);
+  transition: all 0.4s ease;
+}
+
+.error.hidden {
+  transform: translateY(-80rpx);
+  transition: all 0.4s ease;
+}
+
+.tabs {
+  width: 100%;
+  height: 80rpx;
+  line-height: 80rpx;
+  background: #544f6b;
+  position: relative;
+}
+
+.tabs .tab {
+  width: 16.6666%;
+  display: inline-block;
+  color: #8478b3;
+}
+
+.tabs .tab.curr {
+  background: #fff;
+  color: #655c89 !important;
+}
+
+.tabs .line {
+  width: 2rpx;
+  height: 100%;
+  background: #fff;
+  position: absolute;
+  top: 0;
+}
+
+.name {
+  width: 100%;
+  font-size: 30rpx;
+  margin-top: 20rpx;
+  height: 2rem;
+  line-height: 2rem;
+  color: #888;
+}
+
+.name1 {
+  color: red;
+  font-size: 24rpx;
+  margin-top: 20rpx;
+  height: 2rem;
+  line-height: 2rem;
+}
+
+.wrap {
+  color: #888;
+  font-size: 30rpx;
+  height: 1.6rem;
+  line-height: 1.6rem;
+  border: 1px solid #bbb;
+  padding-left: 10rpx;
+  position: relative;
+}
+
+.wrap.noborder {
+  border: 0;
+}
+
+.wrap picker {
+  height: 1.6rem;
+  line-height: 1.6rem;
+  width: 100%;
+  display: inline-block;
+}
+
+.wrap picker .icon {
+  position: absolute;
+  height: 1.5rem;
+  width: 1.5rem;
+  right: 0px;
+  z-index: 9;
+}
+
+.wrap picker .icon.select {
+  height: 1rem;
+  width: 1rem;
+  right: 5rpx;
+  top: 0.2rem;
+}
+
+.wrap picker .icon.select.hover {
+  transform: rotate(180deg);
+  -ms-transform: rotate(180deg); /* IE 9 */
+  -moz-transform: rotate(180deg); /* Firefox */
+  -webkit-transform: rotate(180deg); /* Safari 和 Chrome */
+  -o-transform: rotate(180deg); /* Opera */
+  transform-origin: 50% 50%;
+  transition: all 0.4s ease;
+}
+
+input {
+  background: #fff;
+  padding: 5rpx 0rpx;
+  width: 100%;
+  display: inline-block;
+}

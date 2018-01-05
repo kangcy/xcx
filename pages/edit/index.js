@@ -1,6 +1,7 @@
 var util = require('../../utils/util.js')
 var common = require('../../utils/common.js')
 var bank = require('../../utils/bank.js')
+var api = require('../../utils/network.js')
 const app = getApp()
 const date = new Date()
 const years = []
@@ -30,13 +31,12 @@ for (let i = 1; i < 60; i++) {
 Page({
   data: {
     currtab: 0,
-    showSwiper: false,
     billDateArray: common.billdate,
     levelArray: common.level,
     profitArray: common.profit,
-    posArray: [{ Id: 1, Name: 'POS机1' }, { Id: 2, Name: 'POS机2' }],
-    cardArray: [{ Id: 1, Name: '信用卡1', CardNo: '1234' }, { Id: 2, Name: '信用卡2', CardNo: '1234' }],
-    depositCardArray: [{ Id: 1, Name: '储蓄卡1', CardNo: '1234' }, { Id: 2, Name: '储蓄卡2', CardNo: '1234' }],
+    posArray: [],
+    creditCardArray: [], // 信用卡列表
+    debitCardArray: [], // 储蓄卡列表
     merchantArray: [{ Id: 1, Name: '服装' }, { Id: 2, Name: '餐饮' }],
     bankName: "", // 信用卡号
     bankName1: "", // 储蓄卡号
@@ -57,14 +57,13 @@ Page({
     hasIntegral: false, // 是否有积分
     consumptionScene: [{ Name: '套现', Value: 'simulate', Checked: 'true' }, { Name: '真实消费', Value: 'real' }], // 消费场景
     error: common.error,
-    // 数组中保存的可选日期
+    // 日期控件
     years: years,
     months: months,
     days: days,
     hours: hours,
     minutes: minutes,
     seconds: seconds,
-    // 默认的顶部日期
     year: date.getFullYear(),
     month: util.formatNumber(date.getMonth() + 1),
     day: util.formatNumber(date.getDate()),
@@ -89,23 +88,54 @@ Page({
         })
       }
     })
-    this.initPos()
-    this.initCard()
-    this.setData({
-      showSwiper: true
-    })
-
-    app.globalData.toast = { show: true, msg: "操作成功" }
-
-    setTimeout => { }
-
+    this.initPos(that)
+    this.initCard(that)
     wx.hideNavigationBarLoading() // 隐藏导航条加载动画
   },
-  initPos: function () {
-
+  // POS机列表
+  initPos: function (that) {
+    api.request(common.api[2].outapi, {
+      action: "get",
+      token: app.globalData.token,
+      posId: "",
+      posName: ""
+    }, function (res) {
+      if (res.success) {
+        if (res.data.statuecode === 0) {
+          if (res.data.dataObj) {
+            that.setData({
+              posArray: res.data.dataObj
+            })
+          }
+        }
+      }
+    }, function (res) { })
   },
-  initCard: function () {
-
+  // 卡片列表
+  initCard: function (that) {
+    api.request(common.api[0].outapi, {
+      action: "get",
+      token: app.globalData.token,
+      cardNo: "",
+      bankName: ""
+    }, function (res) {
+      if (res.success) {
+        if (res.data.statuecode === 0) {
+          if (res.data.dataObj) {
+            var credit = res.data.dataObj.filter(x => {
+              return x.cardType === "credit"
+            })
+            var debit = res.data.dataObj.filter(x => {
+              return x.cardType === "debit"
+            })
+            that.setData({
+              creditCardArray: credit,
+              debitCardArray: debit
+            })
+          }
+        }
+      }
+    }, function (res) { })
   },
   // 切换标签
   changeTab: function (e) {
@@ -314,18 +344,76 @@ Page({
   },
   // 新增信用卡
   formSubmit: function (e) {
+    var result = e.detail.value
     console.log('form发生了submit事件，携带数据为：', e.detail.value)
-    //获取远程数据
-    /*wx.request({
-      url: 'https://raw.githubusercontent.com/jiangzy27/how_to_react/master/score.json',
-      header: {
-        "Content-Type": "application/json"
-      },
-      data: {},
-      success: function (res) {
-        that.setData({ removeData: res.data.data });
-      },
-    })*/
+    if (!result.cardNo) {
+      return this.showError("请输入信用卡卡号")
+    }
+    if (!util.checkNumber(result.totalAmount, 0, 1000000)) {
+      return this.showError("请输入当前剩余可用额度")
+    }
+    if (!util.checkNumber(result.fixAmount, 0, 1000000)) {
+      return this.showError("请输入固定额度")
+    }
+    if (result.tempAmount) {
+      if (!util.checkNumber(result.tempAmount, 0, 100000)) {
+        return this.showError("请输入正确的临时额度")
+      }
+      if (!result.tempAmountExpireTime) {
+        return this.showError("请设置临时额度到期日")
+      }
+    }
+    if (!result.validiteDate) {
+      return this.showError("请设置卡片有效期")
+    }
+    api.request(common.api[0].outapi, {
+      action: "add",
+      token: app.globalData.token,
+      cardNo: result.cardNo,
+      bankName: result.bankName,
+      totalAmount: result.totalAmount,
+      fixAmount: result.fixAmount,
+      tempAmount: result.tempAmount,
+      tempAmountExpireTime: result.tempAmountExpireTime,
+      validiteDate: result.validiteDate,
+      billDate: result.billDate,
+      payDayType: isFixedAccount ? "fix" : "day",
+      payDateOrDay: result.payDateOrDay,
+      level: result.level,
+      yearprice: result.yearprice,
+      singleTransLimit: result.singleTransLimit,
+      dayTransLimit: result.dayTransLimit,
+      cardType: "credit"
+    }, function (res) {
+      if (res.success) {
+        if (res.data.result === 1) {
+
+        }
+      }
+    }, function (res) { })
+  },
+  // 新增储蓄卡
+  formSubmit1: function (e) {
+    var result = e.detail.value
+    console.log('form发生了submit事件，携带数据为：', e.detail.value)
+    if (!result.cardNo) {
+      return this.showError("请输入储蓄卡卡号")
+    }
+    api.request(common.api[0].outapi, {
+      action: "add",
+      token: app.globalData.token,
+      cardNo: result.cardNo,
+      bankName: result.bankName,
+      singleTransLimit: result.singleTransLimit,
+      dayTransLimit: result.dayTransLimit,
+      cardType: "debit"
+    }, function (res) {
+      if (res.success) {
+        if (res.data.result === 1) {
+
+        }
+      }
+    }, function (res) { })
   },
   // 新增账单
   formSubmit2: function (e) {
@@ -341,31 +429,24 @@ Page({
     if (!util.checkNumber(result.amount, 0, 1000000)) {
       return this.showError("请输入正确的消费金额")
     }
-    wx.request({
-      url: common.api[1].outapi,
-      header: {
-        "Content-Type": "application/json"
-      },
-      data: {
-        action: "add",
-        token: token,
-        cardNo: result.cardNo,
-        bankName: result.bankName,
-        posId: result.posId,
-        merchantId: result.merchantId,
-        merchantClassify: result.merchantClassify,
-        amount: result.amount,
-        scene: result.scene,
-        hasIntegral: result.hasIntegral
-      },
-      success: function (res) {
-        if (res.success) {
-          if (res.data.result === 1) {
+    api.request(common.api[1].outapi, {
+      action: "add",
+      token: app.globalData.token,
+      cardNo: result.cardNo,
+      bankName: result.bankName,
+      posId: result.posId,
+      merchantId: result.merchantId,
+      merchantClassify: result.merchantClassify,
+      amount: result.amount,
+      scene: result.scene,
+      hasIntegral: result.hasIntegral
+    }, function (res) {
+      if (res.success) {
+        if (res.data.result === 1) {
 
-          }
         }
-      },
-    })
+      }
+    }, function (res) { })
   },
   // 新增POS
   formSubmit4: function (e) {
@@ -396,32 +477,24 @@ Page({
     if (!util.checkNumber(result.redeemFee, 0, 500)) {
       return this.showError("请输入正确的当日赎回费用")
     }
-    return
-    wx.request({
-      url: common.api[2].outapi,
-      header: {
-        "Content-Type": "application/json"
-      },
-      data: {
-        action: "add",
-        token: token,
-        posId: result.posId,
-        cardRate: result.cardRate,
-        flashRate: result.flashRate,
-        t0Rate: result.t0Rate,
-        t1Rate: result.t1Rate,
-        redeemRate: result.redeemRate,
-        redeemFee: result.redeemFee,
-        bindCardNo: result.bindCardNo,
-        status: result.status ? "use" : "delete"
-      },
-      success: function (res) {
-        if (res.success) {
-          if (res.data.result === 1) {
+    api.request(common.api[2].outapi, {
+      action: "add",
+      token: app.globalData.token,
+      posId: result.posId,
+      cardRate: result.cardRate,
+      flashRate: result.flashRate,
+      t0Rate: result.t0Rate,
+      t1Rate: result.t1Rate,
+      redeemRate: result.redeemRate,
+      redeemFee: result.redeemFee,
+      bindCardNo: result.bindCardNo,
+      status: result.status ? "use" : "delete"
+    }, function (res) {
+      if (res.success) {
+        if (res.data.result === 1) {
 
-          }
         }
-      },
-    })
+      }
+    }, function (res) { })
   }
 })

@@ -1,0 +1,23 @@
+<view class="error f16 {{error.show?'show':'hidden'}}">{{error.msg}}</view>
+<!--储蓄-->
+<scroll-view class="container" scroll-y>
+  <form bindsubmit="formSubmit">
+    <text class="name">卡号</text>
+    <view class="wrap">
+      <input type="text" maxlength="19" bindblur="bindBankName" />
+    </view>
+    <text class="name">银行<text class="name1">（根据卡号自动补充）</text></text>
+    <view class="wrap">
+      <input type="text" disabled="true" name="bankName" value="{{bankName}}" />
+    </view>
+    <text class="name">单次交易限额</text>
+    <view class="wrap">
+      <input type="digit" maxlength="10" name="singleTransLimit" />
+    </view>
+    <text class="name">单日交易限额</text>
+    <view class="wrap">
+      <input type="digit" maxlength="10" name="dayTransLimit" />
+    </view>
+    <button type="primary" form-type="submit" class="mt20 mb20">确定</button>
+  </form>
+</scroll-view>

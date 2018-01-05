@@ -336,7 +336,43 @@ var bankname = ["邮储银行·绿卡通", "邮储银行·绿卡银联标准卡"
   "重庆农村商业银行·银联标准贷记卡", "重庆农村商业银行·公务卡", "南阳村镇银行·玉都卡", "晋中市榆次融信村镇银行·魏榆卡", "三水珠江村镇银行·珠江太阳卡", "东营莱商村镇银行·绿洲卡", "建设银行·单位结算卡",
   "玉溪市商业银行·红塔卡"]
 
+
+function request(url, params, success, fail) {
+  this.requestLoading(url, params, "", success, fail)
+}
+
+
+// 自动获取卡片名称
+function getBankName(cardNo, success) {
+  var index = -1;
+  if (isNaN(cardNo) || cardNo.length < 16 || cardNo.length > 19) {
+    return success("")
+  }
+  // 6位Bin号  
+  var cardbin_6 = cardNo.substring(0, 6);
+  for (var i = 0; i < bankbin.length; i++) {
+    if (cardbin_6 == bankbin[i]) {
+      index = i;
+    }
+  }
+  if (index != -1) {
+    return success(bankname[index])
+  }
+  // 8位Bin号  
+  var cardbin_8 = cardNo.substring(0, 8);
+  for (var i = 0; i < bankbin.length; i++) {
+    if (cardbin_8 == bankbin[i]) {
+      index = i;
+    }
+  }
+  if (index != -1) {
+    return success(bankname[index])
+  }
+  return success("")
+}
+
 module.exports = {
   bankbin,
-  bankname
+  bankname,
+  getBankName: getBankName
 }

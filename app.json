@@ -1,6 +1,9 @@
 {
   "pages": [
-    "pages/cardedit/index",
+    "pages/editbill/index",
+    "pages/editdebit/index",
+    "pages/editcard/index",
+    "pages/editpos/index",
     "pages/card/index",
     "pages/billdetail/index",
     "pages/bill/index",

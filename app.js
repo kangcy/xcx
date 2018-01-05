@@ -57,6 +57,7 @@ App({
   },
   globalData: {
     userInfo: null,
+    token: "",
     toast: {
       show: false,
       msg: ""

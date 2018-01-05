@@ -1,0 +1,60 @@
+<import src="../../template/template" />
+<view class="error f16 {{error.show?'show':'hidden'}}">{{error.msg}}</view>
+<!--遮罩层-->
+<view class="dialog-mask {{isDatePickerVisible? 'show': 'hidden'}}" bindtap="toggleDatePicker" data-show="0" />
+<!--时间选择-->
+<template is="datepicker" data="{{isDatePickerVisible,dissipateDate,years,months,days,hours,minutes,seconds}}"></template>
+<!--账单-->
+<scroll-view class="container fl" scroll-y>
+  <form bindsubmit="formSubmit">
+    <text class="name">POS机</text>
+    <view class="wrap">
+      <picker value="{{currPos}}" range="{{posArray}}" range-key="posName" bindchange="bindSelectChange" data-name="currPos">
+        {{posArray[currPos].posName}}
+        <image src="../../images/select.png" class="icon select" />
+        <input type="text" hidden="true" disabled="true" name="posId" value="{{posArray[currPos].posId}}" />
+      </picker>
+    </view>
+    <text class="name">信用卡</text>
+    <view class="wrap">
+      <picker value="{{currCard}}" range="{{creditCardArray}}" range-key="bankName" bindchange="bindSelectChange" data-name="currCard">
+        {{creditCardArray[currCard].bankName}}
+        <image src="../../images/select.png" class="icon select" />
+        <input type="text" hidden="true" disabled="true" name="cardNo" value="{{creditCardArray[currCard].cardNo}}" />
+        <input type="text" hidden="true" disabled="true" name="bankName" value="{{creditCardArray[currCard].bankName}}" />
+      </picker>
+    </view>
+    <text class="name">商户类别</text>
+    <view class="wrap">
+      <picker value="{{currMerchant}}" range="{{merchantArray}}" range-key="Name" bindchange="bindSelectChange" data-name="currMerchant">
+        {{merchantArray[currMerchant].Name}}
+        <image src="../../images/select.png" class="icon select" />
+        <input type="text" hidden="true" disabled="true" name="merchantClassify" value="{{merchantArray[currMerchant].Id}}" />
+      </picker>
+    </view>
+    <text class="name">商户名称<text class="name1">（比如汇美建材）</text></text>
+    <view class="wrap">
+      <input type="text" name="merchantId" />
+    </view>
+    <text class="name">消费金额</text>
+    <view class="wrap">
+      <input type="digit" name="amount" />
+    </view>
+    <text class="name">消费时间<text class="name1">（自动填充为当前时间）</text></text>
+    <view class="wrap" bindtap="toggleDatePicker" data-show="1">
+      {{year}}-{{month}}-{{day}} {{hour}}:{{minute}}:{{second}}
+      <input type="text" hidden="true" disabled="true" name="dissipateDate" value="{{year}}-{{month}}-{{day}} {{hour}}:{{minute}}:{{second}}" />
+    </view>
+    <view class="wrap noborder mt10">
+      <radio-group class="radio-group fl" bindchange="radioChange" name="scene">
+        <label class="mr10" wx:for="{{consumptionScene}}" wx:key="index">
+          <radio value="{{item.Value}}" checked="{{item.Checked}}" />{{item.Name}}
+        </label>
+      </radio-group>
+      <label class="fr">
+        <switch bindchange="bindSwitchChange" type="checkbox" checked="{{hasIntegral}}" name="hasIntegral" data-name="hasIntegral" /> 是否有积分
+      </label>
+    </view>
+    <button type="primary" form-type="submit" class="mt20">确定</button>
+  </form>
+</scroll-view>

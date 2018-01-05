@@ -1,0 +1,79 @@
+<view class="error f16 {{error.show?'show':'hidden'}}">{{error.msg}}</view>
+<!--信用卡-->
+<scroll-view class="container fl" scroll-y>
+  <form bindsubmit="formSubmit0">
+    <text class="name">卡号</text>
+    <view class="wrap">
+      <input type="text" maxlength="19" name="cardNo" bindblur="bindBankName" />
+    </view>
+    <text class="name">银行<text class="name1">（根据卡号自动补充）</text></text>
+    <view class="wrap">
+      <input type="text" disabled="true" name="bankName" value="{{bankName}}" />
+    </view>
+    <text class="name">当前剩余可用额度</text>
+    <view class="wrap">
+      <input type="number" disabled="true" name="totalAmount" />
+    </view>
+    <text class="name">固定额度</text>
+    <view class="wrap">
+      <input type="number" maxlength="10" name="fixAmount" />
+    </view>
+    <text class="name">临时额度</text>
+    <view class="wrap">
+      <input type="digit" maxlength="10" name="tempAmount" />
+    </view>
+    <text class="name">临时额度到期日</text>
+    <view class="wrap">
+      <picker mode="date" value="{{quotaDate}}" bindchange="bindSelectChange" data-name="quotaDate">
+        {{quotaDate}}
+        <image src="../../images/date.png" class="icon" />
+        <input type="text" hidden="true" disabled="true" name="tempAmountExpireTime" value="{{quotaDate}}" />
+      </picker>
+    </view>
+    <text class="name">卡片有效期</text>
+    <view class="wrap">
+      <picker mode="date" value="{{validiteDate}}" bindchange="bindSelectChange" data-name="validiteDate">
+        {{validiteDate}}
+        <image src="../../images/date.png" class="icon" />
+        <input type="text" hidden="true" disabled="true" name="validiteDate" value="{{validiteDate}}" />
+      </picker>
+    </view>
+    <text class="name">卡片等级</text>
+    <view class="wrap">
+      <picker bindchange="bindLevelChange" value="{{currLevel}}" range="{{levelArray}}">
+        {{levelArray[currLevel]}}
+        <image src="../../images/select.png" class="icon select" />
+        <input type="text" hidden="true" disabled="true" name="level" value="{{levelArray[currLevel]}}" />
+      </picker>
+    </view>
+    <text class="name">账单日</text>
+    <view class="wrap">
+      <picker value="{{currBillDate}}" range="{{billDateArray}}" bindchange="bindSelectChange" data-name="currBillDate">
+        {{billDateArray[currBillDate]}}
+        <image src="../../images/select.png" class="icon select" />
+        <input type="text" hidden="true" disabled="true" name="billDate" value="{{billDateArray[currBillDate]}}" />
+      </picker>
+    </view>
+    <view class="mt10 f15">
+      <text class="c888">是否固定还款日</text>
+      <switch bindchange="bindSwitchChange" class="fr" checked="{{isFixedAccount}}" data-name="isFixedAccount" />
+    </view>
+    <text class="name">{{isFixedAccount?"还款日":"间隔天数"}}</text>
+    <view class="wrap">
+      <picker value="{{currBillDate}}" range="{{billDateArray}}" bindchange="bindSelectChange" data-name="currBillDate">
+        {{billDateArray[currBillDate]}}
+        <image src="../../images/select.png" class="icon select" />
+        <input type="text" hidden="true" disabled="true" name="payDateOrDay" value="{{billDateArray[currBillDate]}}" />
+      </picker>
+    </view>
+    <text class="name">单次交易限额</text>
+    <view class="wrap">
+      <input type="digit" maxlength="10" name="singleTransLimit" />
+    </view>
+    <text class="name">单日交易限额</text>
+    <view class="wrap">
+      <input type="digit" maxlength="10" name="dayTransLimit" />
+    </view>
+    <button type="primary" form-type="submit" class="mt20 mb20">确定</button>
+  </form>
+</scroll-view>
