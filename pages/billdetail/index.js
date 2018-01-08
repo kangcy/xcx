@@ -1,5 +1,7 @@
-//index.js
-//获取应用实例
+var util = require('../../utils/util.js')
+var bank = require('../../utils/bank.js')
+var common = require('../../utils/common.js')
+var api = require('../../utils/network.js')
 const app = getApp()
 
 Page({
@@ -12,6 +14,11 @@ Page({
     scrollHeight: 0
   },
   onLoad: function (option) {
+    var token = wx.getStorageSync('token') || "";
+    if (!token) {
+      return this.showError("登录过期")
+    }
+
     this.data.cardid = option.key
     wx.setNavigationBarTitle({
       title: "信用卡详细" + this.data.cardid
@@ -27,18 +34,28 @@ Page({
         })
       }
     })
-    this.getCard()
+    this.initCard(that, this.data.cardid)
     this.initPlan()
   },
-  // 我的卡片
-  getCard: function () {
-    var card = { "Id": 1, "Bank": 1, "Name": "白金卡", "Price": 1888, "StatementDate": "05", "PaymentDueDay": "01.25", "Remainder": 1354.5 }
-    var result = app.globalData.bank.filter(x => { return x.Id === card.Bank });
-    card.BankName = result[0].Name;
-    card.Icon = "../../" + result[0].Icon;
-    this.setData({
-      card: card
-    })
+  initCard: function (that, cardno) {
+    api.request(common.api[0].outapi, {
+      action: "get",
+      token: wx.getStorageSync("token") || null,
+      cardNo: cardno,
+      bankName: ""
+    }, function (res) {
+      if (res.success) {
+        if (res.data.statuecode === 0) {
+          if (res.data.dataObj) {
+            var item = res.data.dataObj[0]
+            item.Icon = bank.getBankIcon(item.bankName)
+            that.setData({
+              card: item
+            })
+          }
+        }
+      }
+    }, function (res) { })
   },
   initPlan: function () {
     var plan = [{ "Id": 1, "Plan": 1, "Price": 1888 }, { "Id": 2, "Plan": 2, "Price": 2888 }, { "Id": 3, "Plan": 3, "Price": 4888 }, { "Id": 4, "Plan": 4, "Price": 4888 }, { "Id": 5, "Plan": 1, "Price": 1888 }, { "Id": 6, "Plan": 2, "Price": 2888 }, { "Id": 7, "Plan": 3, "Price": 4888 }, { "Id": 8, "Plan": 4, "Price": 4888 }]

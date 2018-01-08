@@ -371,8 +371,61 @@ function getBankName(cardNo, success) {
   return success("")
 }
 
+function getBankIcon(name) {
+  if (!name) {
+    return "";
+  }
+  if (name.indexOf('北京') >= 0) {
+    return "../../images/bank/北京.png";
+  }
+  else if (name.indexOf('工商') >= 0) {
+    return "../../images/bank/工行.png";
+  }
+  else if (name.indexOf('光大') >= 0) {
+    return "../../images/bank/光大.png";
+  }
+  else if (name.indexOf('广发') >= 0) {
+    return "../../images/bank/广发.png";
+  }
+  else if (name.indexOf('建设') >= 0) {
+    return "../../images/bank/建设.png";
+  }
+  else if (name.indexOf('民生') >= 0) {
+    return "../../images/bank/民生.png";
+  }
+  else if (name.indexOf('农行') >= 0) {
+    return "../../images/bank/农行.png";
+  }
+  else if (name.indexOf('浦发') >= 0) {
+    return "../../images/bank/浦发.png";
+  }
+  else if (name.indexOf('上海') >= 0) {
+    return "../../images/bank/上海.png";
+  }
+  else if (name.indexOf('兴业') >= 0) {
+    return "../../images/bank/兴业.png";
+  }
+  else if (name.indexOf('邮储') >= 0) {
+    return "../../images/bank/邮储.png";
+  }
+  else if (name.indexOf('招商') >= 0) {
+    return "../../images/bank/招商.png";
+  }
+  else if (name.indexOf('中行') >= 0) {
+    return "../../images/bank/中行.png";
+  }
+  else if (name.indexOf('中信') >= 0) {
+    return "../../images/bank/中信.png";
+  }
+  else if (name.indexOf('平安') >= 0) {
+    return "../../images/bank/平安.png";
+  }
+  return "";
+}
+
 module.exports = {
   bankbin,
   bankname,
-  getBankName: getBankName
+  getBankName: getBankName,
+  getBankIcon: getBankIcon
 }

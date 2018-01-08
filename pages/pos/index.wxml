@@ -1,0 +1,7 @@
+<import src="../../template/template" />
+<scroll-view class="bill fl" scroll-y>
+  <block wx:for="{{card}}" wx:key="index" wx:for-index="index" wx:for-item="item">
+    <template is="line" data="{{bottom:'10rpx solid #eee'}}"></template>
+    <template is="pos" data="{{...item}}"></template>
+  </block>
+</scroll-view>

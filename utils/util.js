@@ -37,8 +37,20 @@ const checkNumber = (num, min, max) => {
   return true
 }
 
+// 根据名称获取索引
+function getIndex(list, name) {
+  var index = 0;
+  list.forEach((x, i) => {
+    if (x === name) {
+      index = i
+    }
+  })
+  return index
+}
+
 module.exports = {
   formatTime: formatTime,
   formatNumber: formatNumber,
-  checkNumber: checkNumber
+  checkNumber: checkNumber,
+  getIndex: getIndex
 }

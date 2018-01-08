@@ -5,29 +5,9 @@
   <button type="{{currtab===2?'warn':'default'}}" size="mini" plain="false" size="mini" class="mr5" catchtap="changeTab" data-index="2">还款日</button>
   <button type="{{currtab===3?'warn':'default'}}" size="mini" plain="false" size="mini" catchtap="changeTab" data-index="3">额度</button>
 </view>
-<swiper current="{{currtab}}" circular="true" duration="1000" style="height:{{scrollHeight}}px;" bindchange="swiperChange">
-  <swiper-item>
-    <scroll-view class="bill" scroll-y style="height:{{scrollHeight}}px;">
-      <block wx:for="{{card}}" wx:key="index" wx:for-index="index" wx:for-item="item">
-        <template is="line" data="{{bottom:'10rpx solid #eee'}}"></template>
-        <template is="card" data="{{...item}}"></template>
-      </block>
-    </scroll-view>
-  </swiper-item>
-  <swiper-item>
-    <scroll-view class="bill" scroll-y style="height:{{scrollHeight}}px;">
-      <block wx:for="{{card}}" wx:key="index" wx:for-index="index" wx:for-item="item">
-        <template is="card" data="{{...item}}"></template>
-        <template is="line" data="{{bottom:'10rpx solid #eee'}}"></template>
-      </block>
-    </scroll-view>
-  </swiper-item>
-  <swiper-item>
-    <scroll-view class="bill" scroll-y style="height:{{scrollHeight}}px;">
-      <block wx:for="{{card}}" wx:key="index" wx:for-index="index" wx:for-item="item">
-        <template is="card" data="{{...item}}"></template>
-        <template is="line" data="{{bottom:'10rpx solid #eee'}}"></template>
-      </block>
-    </scroll-view>
-  </swiper-item>
-</swiper>
+<scroll-view class="inline" scroll-y style="height:{{scrollHeight}}px;">
+  <block wx:for="{{card}}" wx:key="index" wx:for-index="index" wx:for-item="item">
+    <template is="card" data="{{...item}}"></template>
+    <template is="line" data="{{bottom:'10rpx solid #eee'}}"></template>
+  </block>
+</scroll-view>

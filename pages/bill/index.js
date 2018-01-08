@@ -14,6 +14,11 @@ Page({
     showSwiper: false
   },
   onLoad: function () {
+    var token = wx.getStorageSync('token') || "";
+    if (!token) {
+      return this.showError("登录过期")
+    }
+    
     var that = this
     // 获取系统信息
     wx.getSystemInfo({

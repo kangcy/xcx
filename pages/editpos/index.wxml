@@ -32,11 +32,11 @@
     </view>
     <text class="name">选择储蓄卡</text>
     <view class="wrap">
-      <picker value="{{currDepositCard}}" range="{{debitCardArray}}" range-key="Name" bindchange="bindSelectChange" data-name="currDepositCard">
-        {{debitCardArray[currDepositCard].Name}}
+      <picker value="{{currDepositCard}}" range="{{debitCardArray}}" range-key="bankName" bindchange="bindSelectChange" data-name="currDepositCard">
+        {{debitCardArray[currDepositCard].bankName}}
         <image src="../../images/select.png" class="icon select" />
-        <input type="text" hidden="true" disabled="true" name="bindCardNo" value="{{debitCardArray[currDepositCard].CardNo}}" />
-        <input type="text" hidden="true" disabled="true" name="bankName" value="{{debitCardArray[currDepositCard].Name}}" />
+        <input type="text" hidden="true" disabled="true" name="bindCardNo" value="{{debitCardArray[currDepositCard].cardNo}}" />
+        <input type="text" hidden="true" disabled="true" name="bankName" value="{{debitCardArray[currDepositCard].bankName}}" />
       </picker>
     </view>
     <view class="mt10 f15">

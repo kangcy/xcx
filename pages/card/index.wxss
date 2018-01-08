@@ -1,7 +1,3 @@
-swiper {
-  height: 250rpx;
-}
-
 .top {
   width: 100%;
   height: 250rpx;

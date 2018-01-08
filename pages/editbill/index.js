@@ -38,6 +38,11 @@ Page({
     isDatePickerVisible: false // 时间选择控件
   },
   onLoad: function () {
+    var token = wx.getStorageSync('token') || "";
+    if (!token) {
+      return this.showError("登录过期")
+    }
+
     var that = this
     wx.showNavigationBarLoading() // 显示导航条加载动画
     this.initPos(that)
@@ -48,9 +53,7 @@ Page({
   initPos: function (that) {
     api.request(common.api[2].outapi, {
       action: "get",
-      token: app.globalData.token,
-      posId: "",
-      posName: ""
+      token: wx.getStorageSync("token")
     }, function (res) {
       if (res.success) {
         if (res.data.statuecode === 0) {
@@ -67,7 +70,7 @@ Page({
   initCard: function (that) {
     api.request(common.api[0].outapi, {
       action: "get",
-      token: app.globalData.token,
+      token: wx.getStorageSync("token") || null,
       cardNo: "",
       bankName: ""
     }, function (res) {
@@ -185,6 +188,12 @@ Page({
     }
     var result = e.detail.value;
     console.log('form发生了submit事件，携带数据为：', e.detail.value)
+    if (!result.posId) {
+      return this.showError("请选择POS机")
+    }
+    if (!result.cardNo) {
+      return this.showError("请选择信用卡")
+    }
     if (!result.merchantId) {
       return this.showError("请输入商户名称")
     }
@@ -193,7 +202,7 @@ Page({
     }
     api.request(common.api[1].outapi, {
       action: "add",
-      token: app.globalData.token,
+      token: wx.getStorageSync('token') || null,
       cardNo: result.cardNo,
       bankName: result.bankName,
       posId: result.posId,
@@ -204,9 +213,18 @@ Page({
       hasIntegral: result.hasIntegral
     }, function (res) {
       if (res.success) {
-        if (res.data.result === 1) {
-
+        if (res.data.statuecode === 0) {
+          wx.showToast({
+            title: '创建成功',
+            icon: 'success',
+            duration: 2000,
+            complete: function () {
+              wx.navigateBack()
+            }
+          })
         }
+      } else {
+        this.showError(res.data.message)
       }
     }, function (res) { })
   }

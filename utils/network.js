@@ -21,14 +21,14 @@ function requestLoading(url, params, message, success, fail) {
       if (message) {
         wx.hideLoading()
       }
-      success(res)
+      success(res.data)
     },
     fail: function (res) {
       wx.hideNavigationBarLoading()
       if (message) {
         wx.hideLoading()
       }
-      fail(res)
+      fail(res.data)
     },
     complete: function (res) {
 

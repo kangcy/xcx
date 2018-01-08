@@ -1,14 +1,14 @@
 .cards {
   width: 100%;
   display: inline-block;
-  height: 240rpx;
+  /* height: 240rpx; */
 }
 
 .cards .head1 {
   width: 100%;
   position: relative;
   padding: 20rpx 0;
-  margin-bottom: 20rpx;
+  /* margin-bottom: 20rpx; */
 }
 
 .cards .head1::after {
@@ -53,6 +53,8 @@
 
 .cards .head2 {
   width: 100%;
+  height: 80rpx;
+  line-height: 80rpx;
 }
 
 .cards .head2 .name {
@@ -60,5 +62,4 @@
   float: left;
   display: inline-block;
   font-size: 26rpx;
-  line-height: 55rpx;
 }

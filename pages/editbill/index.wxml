@@ -29,7 +29,7 @@
       <picker value="{{currMerchant}}" range="{{merchantArray}}" range-key="Name" bindchange="bindSelectChange" data-name="currMerchant">
         {{merchantArray[currMerchant].Name}}
         <image src="../../images/select.png" class="icon select" />
-        <input type="text" hidden="true" disabled="true" name="merchantClassify" value="{{merchantArray[currMerchant].Id}}" />
+        <input type="text" hidden="true" disabled="true" name="merchantClassify" value="{{merchantArray[currMerchant].Name}}" />
       </picker>
     </view>
     <text class="name">商户名称<text class="name1">（比如汇美建材）</text></text>

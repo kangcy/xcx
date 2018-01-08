@@ -4,7 +4,7 @@
   <form bindsubmit="formSubmit">
     <text class="name">卡号</text>
     <view class="wrap">
-      <input type="text" maxlength="19" bindblur="bindBankName" />
+      <input type="text" maxlength="19" bindblur="bindBankName" name="cardNo" />
     </view>
     <text class="name">银行<text class="name1">（根据卡号自动补充）</text></text>
     <view class="wrap">

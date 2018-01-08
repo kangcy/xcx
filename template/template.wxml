@@ -1,26 +1,44 @@
 <!--POS机-->
 <template name="pos">
-  <view class="cards fl" catchtap="showCard" data-hi="{{Id}}">
+  <view class="cards fl" catchtap="showPos" data-index="{{Id}}" style="height:auto;">
     <view class="flexbox head1 tc fl">
-      <view class="flexbox-item" style="flex: 0 0 30%;">
-        <image src="{{Icon}}" mode="widthFix" lazy-load="true" style="width:40%;height:auto;"></image>
+      <view class="flexbox-item" style="flex: 0 0 50%;">
+        <view class="name1 full fl">{{BankName}}</view>
       </view>
-      <view class="flexbox-item" style="flex: 0 0 35%;">
-        <view class="name1 full fl">{{BankName}} {{Name}}</view>
-        <view class="name2 full fl">{{Price}}</view>
-      </view>
-      <view class="flexbox-item" style="flex: 0 0 35%;">
+      <view class="flexbox-item" style="flex: 0 0 25%;">
         <view class="name1 full fl">{{Remainder}}</view>
-        <view class="name2 full fl">剩余应还</view>
+        <view class="name2 full fl">刷卡费率</view>
+      </view>
+      <view class="flexbox-item" style="flex: 0 0 25%;">
+        <view class="name1 full fl">{{Remainder}}</view>
+        <view class="name2 full fl">闪付费率</view>
+      </view>
+    </view>
+    <view class="flexbox head1 tc fl">
+      <view class="flexbox-item" style="flex: 0 0 25%;">
+        <view class="name1 full fl">{{Remainder}}</view>
+        <view class="name2 full fl">T0费率</view>
+      </view>
+      <view class="flexbox-item" style="flex: 0 0 25%;">
+        <view class="name1 full fl">{{Remainder}}</view>
+        <view class="name2 full fl">T1费率</view>
+      </view>
+      <view class="flexbox-item" style="flex: 0 0 25%;">
+        <view class="name1 full fl">{{Remainder}}</view>
+        <view class="name2 full fl">当日赎回费率</view>
+      </view>
+      <view class="flexbox-item" style="flex: 0 0 25%;">
+        <view class="name1 full fl">{{Remainder}}</view>
+        <view class="name2 full fl">当日赎回费用</view>
       </view>
     </view>
     <view class="flexbox head2 tc fl">
       <view class="flexbox-item name" style="flex: 0 0 50%;">
-        账单日
+        收单行卡号
         <text class="cff6900">{{StatementDate}}</text>
       </view>
       <view class="flexbox-item name" style="flex: 0 0 50%;">
-        到期还款日
+        使用状态
         <text class="cff6900">{{PaymentDueDay}}</text>
       </view>
     </view>
@@ -29,28 +47,38 @@
 
 <!--卡片-->
 <template name="card">
-  <view class="cards fl" catchtap="showCard" data-index="{{Id}}">
+  <view wx:if="{{cardType==='credit'}}" class="cards fl" catchtap="showCard" data-index="{{cardNo}}" data-type="{{cardType}}">
     <view class="flexbox head1 tc fl">
       <view class="flexbox-item" style="flex: 0 0 30%;">
         <image src="{{Icon}}" mode="widthFix" lazy-load="true" style="width:40%;height:auto;"></image>
       </view>
       <view class="flexbox-item" style="flex: 0 0 35%;">
-        <view class="name1 full fl">{{BankName}} {{Name}}</view>
-        <view class="name2 full fl">{{Price}}</view>
+        <view class="name1 full fl">{{bankName}} {{cardLevel}}</view>
+        <view class="name2 full fl">{{totalAmount}}</view>
       </view>
       <view class="flexbox-item" style="flex: 0 0 35%;">
-        <view class="name1 full fl">{{Remainder}}</view>
+        <view class="name1 full fl">{{totalAmount}}</view>
         <view class="name2 full fl">剩余应还</view>
       </view>
     </view>
     <view class="flexbox head2 tc fl">
       <view class="flexbox-item name" style="flex: 0 0 50%;">
         账单日
-        <text class="cff6900">{{StatementDate}}</text>
+        <text class="cff6900">{{billDay}}</text>
       </view>
       <view class="flexbox-item name" style="flex: 0 0 50%;">
         到期还款日
-        <text class="cff6900">{{PaymentDueDay}}</text>
+        <text class="cff6900">{{payDate}}</text>
+      </view>
+    </view>
+  </view>
+  <view wx:if="{{cardType==='debit'}}" class="cards fl" catchtap="showCard" data-index="{{Id}}" data-type="{{cardType}}">
+    <view class="flexbox head1 tc fl">
+      <view class="flexbox-item" style="flex: 0 0 30%;">
+        <image src="{{Icon}}" mode="widthFix" lazy-load="true" style="width:40%;height:auto;"></image>
+      </view>
+      <view class="flexbox-item" style="flex: 0 0 70%;">
+        <view class="name1 full fl tl">{{bankName}} {{Name}}</view>
       </view>
     </view>
   </view>

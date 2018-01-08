@@ -14,6 +14,10 @@ Page({
     error: common.error
   },
   onLoad: function () {
+    var token = wx.getStorageSync('token') || "";
+    if (!token) {
+      return this.showError("登录过期")
+    }
     var that = this
     wx.showNavigationBarLoading() // 显示导航条加载动画
     this.initCard(that)
@@ -23,7 +27,7 @@ Page({
   initCard: function (that) {
     api.request(common.api[0].outapi, {
       action: "get",
-      token: app.globalData.token,
+      token: wx.getStorageSync("token") || null,
       cardNo: "",
       bankName: ""
     }, function (res) {
@@ -84,7 +88,7 @@ Page({
   },
   // 新增POS
   formSubmit: function (e) {
-    var token = wx.getStorageSync('token') || "";
+    var token = wx.getStorageSync('token') || null;
     if (!token) {
       return this.showError("登录过期")
     }
@@ -125,9 +129,18 @@ Page({
       status: result.status ? "use" : "delete"
     }, function (res) {
       if (res.success) {
-        if (res.data.result === 1) {
-
+        if (res.data.statuecode === 0) {
+          wx.showToast({
+            title: '创建成功',
+            icon: 'success',
+            duration: 2000,
+            complete: function () {
+              wx.navigateBack()
+            }
+          })
         }
+      } else {
+        this.showError(res.data.message)
       }
     }, function (res) { })
   }
