@@ -1,11 +1,11 @@
 {
   "pages": [
-    "pages/editcard/index",
-    "pages/card/index",
-    "pages/editpos/index",
-    "pages/editdebit/index",
-    "pages/editbill/index",
     "pages/pos/index",
+    "pages/editpos/index",
+    "pages/editbill/index",
+    "pages/editcard/index",
+    "pages/editdebit/index",
+    "pages/card/index",
     "pages/billdetail/index",
     "pages/bill/index",
     "pages/citypick/index",

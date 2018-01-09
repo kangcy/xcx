@@ -1,45 +1,44 @@
 <!--POS机-->
 <template name="pos">
-  <view class="cards fl" catchtap="showPos" data-index="{{Id}}" style="height:auto;">
+  <view class="cards fl" catchtap="showPos" data-index="{{id}}" style="height:auto;">
     <view class="flexbox head1 tc fl">
       <view class="flexbox-item" style="flex: 0 0 50%;">
-        <view class="name1 full fl">{{BankName}}</view>
+        <view class="name1 full fl cff6900">{{posName}}</view>
       </view>
       <view class="flexbox-item" style="flex: 0 0 25%;">
-        <view class="name1 full fl">{{Remainder}}</view>
+        <view class="name1 full fl">{{cardRate}}</view>
         <view class="name2 full fl">刷卡费率</view>
       </view>
       <view class="flexbox-item" style="flex: 0 0 25%;">
-        <view class="name1 full fl">{{Remainder}}</view>
+        <view class="name1 full fl">{{flashRate}}</view>
         <view class="name2 full fl">闪付费率</view>
       </view>
     </view>
     <view class="flexbox head1 tc fl">
       <view class="flexbox-item" style="flex: 0 0 25%;">
-        <view class="name1 full fl">{{Remainder}}</view>
+        <view class="name1 full fl">{{t0Rate}}</view>
         <view class="name2 full fl">T0费率</view>
       </view>
       <view class="flexbox-item" style="flex: 0 0 25%;">
-        <view class="name1 full fl">{{Remainder}}</view>
+        <view class="name1 full fl">{{t1Rate}}</view>
         <view class="name2 full fl">T1费率</view>
       </view>
       <view class="flexbox-item" style="flex: 0 0 25%;">
-        <view class="name1 full fl">{{Remainder}}</view>
+        <view class="name1 full fl">{{redeemRate}}</view>
         <view class="name2 full fl">当日赎回费率</view>
       </view>
       <view class="flexbox-item" style="flex: 0 0 25%;">
-        <view class="name1 full fl">{{Remainder}}</view>
+        <view class="name1 full fl">{{redeemFee}}</view>
         <view class="name2 full fl">当日赎回费用</view>
       </view>
     </view>
     <view class="flexbox head2 tc fl">
-      <view class="flexbox-item name" style="flex: 0 0 50%;">
+      <view class="flexbox-item name" style="flex: 0 0 75%;">
         收单行卡号
-        <text class="cff6900">{{StatementDate}}</text>
+        <text class="cff6900">{{bindCardNo}}</text>
       </view>
-      <view class="flexbox-item name" style="flex: 0 0 50%;">
-        使用状态
-        <text class="cff6900">{{PaymentDueDay}}</text>
+      <view class="flexbox-item name" style="flex: 0 0 25%;">
+        <text class="cff6900">{{status==="use"?"使用":"不使用"}}</text>
       </view>
     </view>
   </view>

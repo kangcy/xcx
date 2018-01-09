@@ -25,6 +25,12 @@ const api = [
     "name": "用户资金流水接口",
     "inapi": "http://10.10.141.70:28080/haommoney/UserCashTransLog",
     "outapi": "https://api.whalegroup.cn/haomoney/UserCashTransLog"
+  },
+  {
+    "id": 4,
+    "name": "系统POS机设置",
+    "inapi": "http://10.10.141.70:28080/haommoney/PosInfo",
+    "outapi": "https://api.whalegroup.cn/haomoney/PosInfo"
   }
 ]
 

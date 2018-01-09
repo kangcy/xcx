@@ -9,19 +9,19 @@
   <form bindsubmit="formSubmit">
     <text class="name">POS机</text>
     <view class="wrap">
-      <picker value="{{currPos}}" range="{{posArray}}" range-key="posName" bindchange="bindSelectChange" data-name="currPos">
-        {{posArray[currPos].posName}}
+      <picker value="{{currBill.posId}}" range="{{posArray}}" range-key="posName" bindchange="bindSelectChange" data-name="posId">
+        {{currBill.posName}}
         <image src="../../images/select.png" class="icon select" />
-        <input type="text" hidden="true" disabled="true" name="posId" value="{{posArray[currPos].posId}}" />
+        <input type="text" hidden="true" disabled="true" name="posId" value="{{currBill.posId}}" />
       </picker>
     </view>
     <text class="name">信用卡</text>
     <view class="wrap">
-      <picker value="{{currCard}}" range="{{creditCardArray}}" range-key="bankName" bindchange="bindSelectChange" data-name="currCard">
-        {{creditCardArray[currCard].bankName}}
+      <picker value="{{currBill.cardNo}}" range="{{creditCardArray}}" range-key="bankName" bindchange="bindSelectChange" data-name="cardNo">
+        {{currBill.bankName}}
         <image src="../../images/select.png" class="icon select" />
-        <input type="text" hidden="true" disabled="true" name="cardNo" value="{{creditCardArray[currCard].cardNo}}" />
-        <input type="text" hidden="true" disabled="true" name="bankName" value="{{creditCardArray[currCard].bankName}}" />
+        <input type="text" hidden="true" disabled="true" name="cardNo" value="{{currBill.cardNo}}" />
+        <input type="text" hidden="true" disabled="true" name="bankName" value="{{currBill.bankName}}" />
       </picker>
     </view>
     <text class="name">商户类别</text>
@@ -52,7 +52,7 @@
         </label>
       </radio-group>
       <label class="fr">
-        <switch bindchange="bindSwitchChange" type="checkbox" checked="{{hasIntegral}}" name="hasIntegral" data-name="hasIntegral" /> 是否有积分
+        <switch bindchange="bindSelectChange" type="checkbox" checked="{{currBill.hasIntegral==='1'}}" name="hasIntegral" data-name="hasIntegral" /> 是否有积分
       </label>
     </view>
     <button type="primary" form-type="submit" class="mt20">确定</button>

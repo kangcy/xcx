@@ -6,19 +6,47 @@ const app = getApp()
 
 Page({
   data: {
-    currtab: 0,
-    bankName: "", // 银行卡名称
+    cardid: 0,
+    currCard: {},
     error: common.error
   },
-  onLoad: function () {
+  onLoad: function (option) {
+    this.data.cardid = option.key
+    wx.setNavigationBarTitle({
+      title: this.data.cardid ? "编辑储蓄卡" : "新增储蓄卡"
+    })
+
     var token = wx.getStorageSync('token') || "";
     if (!token) {
       return this.showError("登录过期")
     }
-
-    var that = this
     wx.showNavigationBarLoading() // 显示导航条加载动画
+    //this.data.cardid = '6225880252246930'
+    this.initCard(this, this.data.cardid)
     wx.hideNavigationBarLoading() // 隐藏导航条加载动画
+  },
+  initCard: function (that, cardno) {
+    if (!cardno) {
+      return
+    }
+    api.request(common.api[0].outapi, {
+      action: "get",
+      token: wx.getStorageSync("token") || null,
+      cardNo: cardno,
+      bankName: ""
+    }, function (res) {
+      if (res.success) {
+        if (res.data.statuecode === 0) {
+          if (res.data.dataObj) {
+            var item = res.data.dataObj[0]
+            item.Icon = bank.getBankIcon(item.bankName)
+            that.setData({
+              currCard: item
+            })
+          }
+        }
+      }
+    }, function (res) { })
   },
   // 自动获取卡片名称
   bindBankName: function (e) {
@@ -26,7 +54,7 @@ Page({
     var cardNo = e.detail.value.toString();
     bank.getBankName(cardNo, function (name) {
       that.setData({
-        bankName: name
+        ["currCard.bankName"]: name
       })
     })
   },
@@ -50,8 +78,9 @@ Page({
     if (!result.cardNo) {
       return this.showError("请输入储蓄卡卡号")
     }
+    var that = this
     api.request(common.api[0].outapi, {
-      action: "add",
+      action: that.data.cardid ? "set" : "add",
       token: wx.getStorageSync('token') || null,
       cardNo: result.cardNo,
       bankName: result.bankName,
@@ -62,7 +91,7 @@ Page({
       if (res.success) {
         if (res.data.statuecode === 0) {
           wx.showToast({
-            title: '创建成功',
+            title: '编辑成功',
             icon: 'success',
             duration: 2000,
             complete: function () {

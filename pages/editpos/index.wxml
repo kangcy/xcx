@@ -2,46 +2,55 @@
 <!--POS-->
 <scroll-view class="container fl" scroll-y>
   <form bindsubmit="formSubmit">
+    <text class="name" wx-if="{{currPos.id===0}}">POS机模板</text>
+    <view class="wrap" wx-if="{{currPos.id===0}}">
+      <picker value="{{currPos.posIdIndex}}" range="{{systemPosArray}}" range-key="posName" bindchange="bindSelectChange" data-name="posId">
+        {{currPos.systemPosName}}
+        <image src="../../images/select.png" class="icon select" />
+        <input type="text" hidden="true" disabled="true" name="posId" value="{{currPos.posId}}" />
+        <input type="text" hidden="true" disabled="true" name="systemPosName" value="{{currPos.systemPosName}}" />
+      </picker>
+    </view>
     <text class="name">POS机名称</text>
     <view class="wrap">
-      <input type="text" maxlength="18" name="posId" />
+      <input type="text" maxlength="18" name="posId" value="{{currPos.posName}}" />
     </view>
     <text class="name">刷卡费率<text class="name1">（%）</text></text>
     <view class="wrap">
-      <input type="digit" maxlength="5" name="cardRate" />
+      <input type="digit" maxlength="5" name="cardRate" value="{{currPos.cardRate}}" />
     </view>
     <text class="name">闪付费率<text class="name1">（%）</text></text>
     <view class="wrap">
-      <input type="digit" maxlength="5" name="flashRate" />
+      <input type="digit" maxlength="5" name="flashRate" value="{{currPos.flashRate}}" />
     </view>
     <text class="name">T0费率<text class="name1">（%）</text></text>
     <view class="wrap">
-      <input type="digit" maxlength="5" name="t0Rate" />
+      <input type="digit" maxlength="5" name="t0Rate" value="{{currPos.t0Rate}}" />
     </view>
     <text class="name">T1费率<text class="name1">（%）</text></text>
     <view class="wrap">
-      <input type="digit" maxlength="5" name="t1Rate" />
+      <input type="digit" maxlength="5" name="t1Rate" value="{{currPos.t1Rate}}" />
     </view>
     <text class="name">当日赎回费率<text class="name1">（%）</text></text>
     <view class="wrap">
-      <input type="digit" maxlength="5" name="redeemRate" />
+      <input type="digit" maxlength="5" name="redeemRate" value="{{currPos.redeemRate}}" />
     </view>
     <text class="name">当日赎回费用</text>
     <view class="wrap">
-      <input type="digit" maxlength="5" name="redeemFee" />
+      <input type="digit" maxlength="5" name="redeemFee" value="{{currPos.redeemFee}}" />
     </view>
     <text class="name">选择储蓄卡</text>
     <view class="wrap">
-      <picker value="{{currDepositCard}}" range="{{debitCardArray}}" range-key="bankName" bindchange="bindSelectChange" data-name="currDepositCard">
-        {{debitCardArray[currDepositCard].bankName}}
+      <picker value="{{currPos.bindCardNoIndex}}" range="{{debitCardArray}}" range-key="bankName" bindchange="bindSelectChange" data-name="bindCardNo">
+        {{currPos.bindCardName}}
         <image src="../../images/select.png" class="icon select" />
-        <input type="text" hidden="true" disabled="true" name="bindCardNo" value="{{debitCardArray[currDepositCard].cardNo}}" />
-        <input type="text" hidden="true" disabled="true" name="bankName" value="{{debitCardArray[currDepositCard].bankName}}" />
+        <input type="text" hidden="true" disabled="true" name="bindCardNo" value="{{currPos.bindCardNo}}" />
+        <input type="text" hidden="true" disabled="true" name="bindCardName" value="{{currPos.bindCardName}}" />
       </picker>
     </view>
     <view class="mt10 f15">
       <text class="c888">是否使用</text>
-      <switch bindchange="bindSwitchChange" class="fr" checked="{{isFixedAcisPosUsedcount}}" name="status" data-name="isPosUsed" />
+      <switch bindchange="bindSelectChange" class="fr" checked="{{currPos.status==='use'}}" name="status" data-name="status" />
     </view>
     <button type="primary" form-type="submit" class="mt20 mb20">确定</button>
   </form>

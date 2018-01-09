@@ -7,25 +7,31 @@ const app = getApp()
 Page({
   data: {
     cardid: 0,
-    currCard: { bankName: "" },
+    currCard: { billDayIndex: 0, billDay: common.billdate[0], payDateOrDayIndex: 0, payDateOrDay: common.billdate[0], cardLevelIndex: 0, cardLevel: common.level[0] },
     billDateArray: common.billdate,
     levelArray: common.level,
     profitArray: common.profit,
     error: common.error
   },
   onLoad: function (option) {
+    this.data.cardid = option.key
+    wx.setNavigationBarTitle({
+      title: this.data.cardid ? "编辑信用卡" : "新增信用卡"
+    })
+
     var token = wx.getStorageSync('token') || "";
     if (!token) {
       return this.showError("登录过期")
     }
-    wx.showNavigationBarLoading() // 显示导航条加载动画
-    var that = this
-    this.data.cardid = option.key
-    this.data.cardid = '6225880252246930'
-    this.initCard(that, option.key)
-    wx.hideNavigationBarLoading() // 隐藏导航条加载动画
+    wx.showNavigationBarLoading()
+    //this.data.cardid = '6225880252246930'
+    this.initCard(this, this.data.cardid)
+    wx.hideNavigationBarLoading()
   },
   initCard: function (that, cardno) {
+    if (!cardno) {
+      return
+    }
     api.request(common.api[0].outapi, {
       action: "get",
       token: wx.getStorageSync("token") || null,
@@ -140,8 +146,9 @@ Page({
     if (!result.validiteDate) {
       return this.showError("请设置卡片有效期")
     }
+    var that = this
     api.request(common.api[0].outapi, {
-      action: "add",
+      action: that.data.cardid ? "set" : "add",
       token: wx.getStorageSync('token') || null,
       cardNo: result.cardNo,
       bankName: result.bankName,
@@ -162,7 +169,7 @@ Page({
       if (res.success) {
         if (res.data.statuecode === 0) {
           wx.showToast({
-            title: '创建成功',
+            title: '编辑成功',
             icon: 'success',
             duration: 2000,
             complete: function () {

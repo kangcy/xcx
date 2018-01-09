@@ -6,19 +6,16 @@ const app = getApp()
 const date = new Date()
 Page({
   data: {
-    currtab: 0,
+    currBill: {},
     posArray: [],
     creditCardArray: [], // 信用卡列表
     debitCardArray: [], // 储蓄卡列表
     merchantArray: [{ Id: 1, Name: '服装' }, { Id: 2, Name: '餐饮' }],
     currCard: 0, // 当前信用卡
-    currDepositCard: 0, // 当前储蓄卡
-    currPos: 0, // 当前pos机
     currMerchant: 0, // 当前商户类型
     isRealAccount: false, // 是否真实消费
     isCash: false, // 是否刷卡套现
     isPosUsed: false, // 是否使用POS机
-    hasIntegral: false, // 是否有积分
     consumptionScene: [{ Name: '套现', Value: 'simulate', Checked: 'true' }, { Name: '真实消费', Value: 'real' }], // 消费场景
     error: common.error,
     // 日期控件
@@ -59,7 +56,9 @@ Page({
         if (res.data.statuecode === 0) {
           if (res.data.dataObj) {
             that.setData({
-              posArray: res.data.dataObj
+              posArray: res.data.dataObj,
+              ["currBill.posId"]: res.data.dataObj[0].id,
+              ["currBill.posName"]: res.data.dataObj[0].posName
             })
           }
         }
@@ -80,38 +79,32 @@ Page({
             var credit = res.data.dataObj.filter(x => {
               return x.cardType === "credit"
             })
-            var debit = res.data.dataObj.filter(x => {
-              return x.cardType === "debit"
-            })
             that.setData({
               creditCardArray: credit,
-              debitCardArray: debit
+              ["currBill.cardNo"]: credit[0].cardNo,
+              ["currBill.bankName"]: credit[0].bankName
             })
           }
         }
       }
     }, function (res) { })
   },
-  // 下拉切换
+  // 选中切换
   bindSelectChange: function (e) {
     var name = e.currentTarget.dataset.name;
     switch (name) {
       // POS机
-      case "currPos":
+      case "posId":
         this.setData({
-          currPos: e.detail.value
+          ["currBill.posId"]: this.data.posArray[e.detail.value].id,
+          ["currBill.posName"]: this.data.posArray[e.detail.value].posName
         })
         break;
       // 信用卡
-      case "currCard":
+      case "cardNo":
         this.setData({
-          currCard: e.detail.value
-        })
-        break;
-      // 储蓄卡
-      case "currDepositCard":
-        this.setData({
-          currDepositCard: e.detail.value
+          ["currBill.cardNo"]: this.data.creditCardArray[0].cardNo,
+          ["currBill.bankName"]: this.data.creditCardArray[0].bankName
         })
         break;
       // 商户类型
@@ -120,30 +113,10 @@ Page({
           currMerchant: e.detail.value
         })
         break;
-      default:
-        break;
-    }
-  },
-  // 选中切换
-  bindSwitchChange: function (e) {
-    var name = e.currentTarget.dataset.name;
-    switch (name) {
-      // POS机
-      case "currPos":
-        this.setData({
-          currPos: e.detail.value
-        })
-        break;
-      // 信用卡
-      case "currCard":
-        this.setData({
-          currCard: e.detail.value
-        })
-        break;
       // 是否有积分
       case "hasIntegral":
         this.setData({
-          hasIntegral: e.detail.value
+          ["currBill.hasIntegral"]: e.detail.value ? 1 : 0
         })
         break;
       default:

@@ -6,25 +6,132 @@ const app = getApp()
 
 Page({
   data: {
-    currtab: 0,
+    posid: 0,
+    currPos: {},
+    systemPosArray: [],
     debitCardArray: [], // 储蓄卡列表
-    bankName1: "", // 储蓄卡号
     currDepositCard: 0, // 当前储蓄卡
     isPosUsed: false, // 是否使用POS机
     error: common.error
   },
-  onLoad: function () {
+  onLoad: function (option) {
+    this.data.posid = option.key
+    wx.setNavigationBarTitle({
+      title: this.data.posid ? "编辑POS机" : "新增POS机"
+    })
     var token = wx.getStorageSync('token') || "";
     if (!token) {
       return this.showError("登录过期")
     }
     var that = this
-    wx.showNavigationBarLoading() // 显示导航条加载动画
-    this.initCard(that)
-    wx.hideNavigationBarLoading() // 隐藏导航条加载动画
+    that.data.posid = '5'
+    wx.showNavigationBarLoading()
+    this.initCard(this, this.data.posid, function () {
+      that.initPos(that, that.data.posid, function (posid) {
+        that.initSystemPos(that, that.data.posid)
+      })
+    })
+    wx.hideNavigationBarLoading()
+  },
+  // 初始化系统POS机列表
+  initSystemPos: function (that, posid) {
+    api.request(common.api[4].outapi, {
+      action: "get",
+      token: wx.getStorageSync("token")
+    }, function (res) {
+      if (res.success) {
+        if (res.data.statuecode === 0) {
+          if (res.data.dataObj) {
+            var index = 0;
+            var systemposid = res.data.dataObj[0].posId;
+            var name = res.data.dataObj[0].posName;
+            var system = res.data.dataObj[0];
+            res.data.dataObj.forEach((x, i) => {
+              if (x.posId === posid) {
+                index = i
+                systemposid = x.posId
+                name = x.posName
+                system = x
+              }
+            })
+            // 调用系统模板
+            if (!posid) {
+              that.data.currPos = system
+              that.data.currPos.id = 0
+              that.data.currPos.posIdIndex = index
+              that.data.currPos.posId = systemposid
+              that.data.currPos.systemPosName = name
+              that.data.currPos.bindCardNoIndex = 0
+              that.data.currPos.bindCardNo = that.data.debitCardArray[0].cardNo
+              that.data.currPos.bindCardName = that.data.debitCardArray[0].bankName
+              that.setData({
+                systemPosArray: res.data.dataObj,
+                currPos: that.data.currPos
+              })
+            } else {
+              that.setData({
+                systemPosArray: res.data.dataObj,
+                ["currPos.posIdIndex"]: index,
+                ["currPos.posId"]: systemposid,
+                ["currPos.systemPosName"]: name,
+              })
+            }
+          }
+        }
+      }
+    }, function (res) { })
+  },
+  // 切换系统POS机
+  changeSystemPos: function (index) {
+    var that = this
+    var system = this.data.systemPosArray[index]
+    this.data.currPos = system
+    this.data.currPos.posIdIndex = index
+    this.data.currPos.posId = system.posId
+    this.data.currPos.systemPosName = system.posName
+    that.data.currPos.bindCardNoIndex = 0
+    that.data.currPos.bindCardNo = that.data.debitCardArray[0].cardNo
+    that.data.currPos.bindCardName = that.data.debitCardArray[0].bankName
+    this.setData({
+      currPos: that.data.currPos
+    })
+  },
+  // POS机列表
+  initPos: function (that, posid, callback) {
+    if (!posid) {
+      callback(0)
+      return
+    }
+    api.request(common.api[2].outapi, {
+      action: "get",
+      token: wx.getStorageSync("token"),
+      id: posid
+    }, function (res) {
+      if (res.success) {
+        if (res.data.statuecode === 0) {
+          if (res.data.dataObj) {
+            var item = res.data.dataObj[0]
+            var index = 0;
+            var name = "";
+            that.data.debitCardArray.forEach((x, i) => {
+              if (x.cardNo === item.bindCardNo) {
+                index = i
+                name = x.bankName
+              }
+            })
+            item.bindCardNoIndex = index
+            item.bindCardName = name
+            that.setData({
+              currPos: item
+            })
+            callback(item.posId)
+          }
+        }
+      }
+    }, function (res) { })
   },
   // 卡片列表
-  initCard: function (that) {
+  initCard: function (that, posid, callback) {
     api.request(common.api[0].outapi, {
       action: "get",
       token: wx.getStorageSync("token") || null,
@@ -40,34 +147,39 @@ Page({
             that.setData({
               debitCardArray: debit
             })
+            if (!posid) {
+              that.setData({
+                ["currPos.bindCardNoIndex"]: 0,
+                ["currPos.bindCardNo"]: debit[0].cardNo,
+                ["currPos.bindCardName"]: debit[0].bankName
+              })
+            }
+            callback()
           }
         }
       }
     }, function (res) { })
   },
-  // 下拉切换
+  // 选中切换
   bindSelectChange: function (e) {
     var name = e.currentTarget.dataset.name;
     switch (name) {
       // 储蓄卡
-      case "currDepositCard":
+      case "bindCardNo":
         this.setData({
-          currDepositCard: e.detail.value
+          ["currPos.bindCardNo"]: this.data.debitCardArray[e.detail.value].cardNo,
+          ["currPos.bindCardName"]: this.data.debitCardArray[e.detail.value].bankName
         })
         break;
-      default:
-        break;
-    }
-  },
-  // 选中切换
-  bindSwitchChange: function (e) {
-    var name = e.currentTarget.dataset.name;
-    switch (name) {
       // 是否使用POS机
-      case "isPosUsed":
+      case "status":
         this.setData({
-          isPosUsed: e.detail.value
+          ["currPos.status"]: e.detail.value ? "use" : "delete"
         })
+        break;
+      // 系统POS机
+      case "posId":
+        this.changeSystemPos(e.detail.value)
         break;
       default:
         break;
@@ -115,8 +227,9 @@ Page({
     if (!util.checkNumber(result.redeemFee, 0, 500)) {
       return this.showError("请输入正确的当日赎回费用")
     }
+    var that = this
     api.request(common.api[2].outapi, {
-      action: "add",
+      action: that.data.posid ? "set" : "add",
       token: token,
       posId: result.posId,
       cardRate: result.cardRate,
@@ -131,7 +244,7 @@ Page({
       if (res.success) {
         if (res.data.statuecode === 0) {
           wx.showToast({
-            title: '创建成功',
+            title: '编辑成功',
             icon: 'success',
             duration: 2000,
             complete: function () {
